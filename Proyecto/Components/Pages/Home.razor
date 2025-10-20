@@ -1,0 +1,80 @@
+﻿@page "/"
+@using Proyecto.ViewModels
+@using Proyecto.Models
+@using Proyecto.Contracts
+@inject IProjectService ProjectService
+
+<PageTitle>Editor de Fotos - Mis Proyectos</PageTitle>
+
+<h1>Mis Proyectos</h1>
+
+<div class="toolbar">
+    <button class="btn btn-primary" @onclick="ShowCreateDialog">
+        <i class="fas fa-plus"></i> Nuevo Proyecto
+    </button>
+</div>
+
+@if (viewModel.ShowProjectDialog)
+{
+    <ProjectModal ViewModel="viewModel.ProjectDialogViewModel" 
+                  Visible="viewModel.ShowProjectDialog"
+                  OnClose="CloseProjectDialog" 
+                  OnConfirm="HandleProjectConfirm" />
+}
+else
+{
+    <div class="projects-grid">
+        @foreach (var project in viewModel.Projects)
+        {
+            <div class="project-card">
+                <div class="project-thumbnail">
+                    <img src="@project.Thumbnail" alt="@project.Name" />
+                </div>
+                <div class="project-info">
+                    <h3>@project.Name</h3>
+                    <p>Editado: @project.LastModified.ToString("dd/MM/yyyy")</p>
+                </div>
+                <div class="project-actions">
+                    <button class="btn btn-sm btn-outline" @onclick="() => EditProject(project)">
+                        Editar
+                    </button>
+                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteProject(project)">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (viewModel.ShowProjectDialog)
+{
+    <p>Modal de proyecto aparecerá aquí</p>
+}
+
+@code {
+    private HomeViewModel viewModel;
+
+    protected override void OnInitialized()
+    {
+        viewModel = new HomeViewModel(ProjectService);
+    }
+
+    private void ShowCreateDialog()
+    {
+        viewModel.ShowCreateDialog();
+        StateHasChanged();
+    }
+
+    private void EditProject(Project project)
+    {
+        viewModel.ShowEditDialog(project);
+        StateHasChanged();
+    }
+
+    private void DeleteProject(Project project)
+    {
+        viewModel.DeleteProject(project);
+        StateHasChanged();
+    }
+}

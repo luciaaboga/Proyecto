@@ -1851,11 +1851,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\bogad\\source\\repos\\Proyecto\\Proyecto\\Proyecto.csproj",
+      "projectUniqueName": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Proyecto.csproj",
       "projectName": "Proyecto",
-      "projectPath": "C:\\Users\\bogad\\source\\repos\\Proyecto\\Proyecto\\Proyecto.csproj",
+      "projectPath": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Proyecto.csproj",
       "packagesPath": "C:\\Users\\bogad\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\bogad\\source\\repos\\Proyecto\\Proyecto\\obj\\",
+      "outputPath": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

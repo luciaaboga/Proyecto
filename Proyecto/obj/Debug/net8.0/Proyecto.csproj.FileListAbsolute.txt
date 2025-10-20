@@ -1036,3 +1036,14 @@ C:\Users\bogad\source\repos\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.dll
 C:\Users\bogad\source\repos\Proyecto\Proyecto\obj\Debug\net8.0\refint\Proyecto.dll
 C:\Users\bogad\source\repos\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.pdb
 C:\Users\bogad\source\repos\Proyecto\Proyecto\obj\Debug\net8.0\ref\Proyecto.dll
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.csproj.AssemblyReference.cache
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.AssemblyInfoInputs.cache
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.AssemblyInfo.cs
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.csproj.CoreCompileInputs.cache
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.sourcelink.json
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.dll
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\refint\Proyecto.dll
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\Proyecto.pdb
