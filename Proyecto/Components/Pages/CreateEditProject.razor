@@ -1,0 +1,124 @@
+﻿@page "/create-project"
+@page "/edit-project/{ProjectId}"
+@using Proyecto.Contracts
+@using Proyecto.ViewModels
+@using Proyecto.Models
+
+<h2>@(IsEditMode ? "Editar Proyecto" : "Crear Nuevo Proyecto")</h2>
+
+<div class="form-container">
+    <div class="form-group">
+        <label for="projectName">Nombre del Proyecto</label>
+        <input id="projectName"
+               type="text"
+               @bind="CurrentProject.Name"
+               @bind:event="oninput"
+               placeholder="Ingresa un nombre para tu proyecto" />
+    </div>
+
+    @if (!IsEditMode)
+    {
+        <div class="form-group">
+            <label for="imageUpload">Imagen</label>
+            <InputFile id="imageUpload"
+                       accept="image/*"
+                       OnChange="HandleImageUpload"
+                       class="file-input" />
+
+            @if (!string.IsNullOrEmpty(ImagePreview))
+            {
+                <div class="image-preview">
+                    <img src="@ImagePreview" alt="Vista previa" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <label>Imagen Actual</label>
+            <div class="image-preview">
+                <img src="@ImagePreview" alt="Imagen actual" />
+            </div>
+        </div>
+    }
+
+    <div class="form-actions">
+        <button class="btn btn-secondary" @onclick="GoBack">Cancelar</button>
+        <button class="btn btn-primary"
+                @onclick="SaveProject"
+                disabled="@(!IsValid())">
+            @(IsEditMode ? "Actualizar" : "Crear")
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ProjectId { get; set; }
+
+    [Inject]
+    private NavigationManager Navigation { get; set; }
+
+    [Inject]
+    private IProjectService ProjectService { get; set; }
+
+    private Project CurrentProject { get; set; } = new Project();
+    private string ImagePreview { get; set; } = string.Empty;
+    private bool IsEditMode => !string.IsNullOrEmpty(ProjectId);
+
+    protected override void OnInitialized()
+    {
+        if (IsEditMode)
+        {
+            // Cargar proyecto existente para editar
+            var project = ProjectService.GetProjectById(Guid.Parse(ProjectId));
+            if (project != null)
+            {
+                CurrentProject = project;
+                ImagePreview = project.ImagePath;
+            }
+        }
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream().ReadAsync(buffer);
+            var base64String = Convert.ToBase64String(buffer);
+            var dataUrl = $"data:{file.ContentType};base64,{base64String}";
+
+            CurrentProject.ImagePath = dataUrl;
+            CurrentProject.Thumbnail = dataUrl; 
+            ImagePreview = dataUrl;
+            StateHasChanged();
+        }
+    }
+
+    private void SaveProject()
+    {
+        if (IsEditMode)
+        {
+            ProjectService.UpdateProject(CurrentProject);
+        }
+        else
+        {
+            ProjectService.CreateProject(CurrentProject);
+        }
+        Navigation.NavigateTo("/");
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private bool IsValid()
+    {
+        return !string.IsNullOrEmpty(CurrentProject.Name) &&
+               !string.IsNullOrEmpty(CurrentProject.ImagePath);
+    }
+}

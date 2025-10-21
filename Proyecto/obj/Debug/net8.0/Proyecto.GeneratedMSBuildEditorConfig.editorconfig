@@ -28,12 +28,12 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/Components/Pages/Home.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
+[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/Components/Pages/CreateEditProject.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDcmVhdGVFZGl0UHJvamVjdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/Components/Shared/ProjectModal.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcUHJvamVjdE1vZGFsLnJhem9y
+[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/Components/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/_Imports.razor]

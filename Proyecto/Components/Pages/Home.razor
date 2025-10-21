@@ -3,23 +3,24 @@
 @using Proyecto.Models
 @using Proyecto.Contracts
 @inject IProjectService ProjectService
+@inject NavigationManager Navigation
 
 <PageTitle>Editor de Fotos - Mis Proyectos</PageTitle>
 
 <h1>Mis Proyectos</h1>
 
 <div class="toolbar">
-    <button class="btn btn-primary" @onclick="ShowCreateDialog">
+    <button class="btn btn-primary" @onclick="NavigateToCreate">
         <i class="fas fa-plus"></i> Nuevo Proyecto
     </button>
 </div>
 
-@if (viewModel.ShowProjectDialog)
+@if (viewModel.Projects.Count == 0)
 {
-    <ProjectModal ViewModel="viewModel.ProjectDialogViewModel" 
-                  Visible="viewModel.ShowProjectDialog"
-                  OnClose="CloseProjectDialog" 
-                  OnConfirm="HandleProjectConfirm" />
+    <div class="empty-state">
+        <p>No tienes proyectos creados</p>
+        <p>Crea tu primer proyecto para empezar a editar fotos</p>
+    </div>
 }
 else
 {
@@ -35,7 +36,7 @@ else
                     <p>Editado: @project.LastModified.ToString("dd/MM/yyyy")</p>
                 </div>
                 <div class="project-actions">
-                    <button class="btn btn-sm btn-outline" @onclick="() => EditProject(project)">
+                    <button class="btn btn-sm btn-outline" @onclick="() => NavigateToEdit(project)">
                         Editar
                     </button>
                     <button class="btn btn-sm btn-danger" @onclick="() => DeleteProject(project)">
@@ -47,11 +48,6 @@ else
     </div>
 }
 
-@if (viewModel.ShowProjectDialog)
-{
-    <p>Modal de proyecto aparecerá aquí</p>
-}
-
 @code {
     private HomeViewModel viewModel;
 
@@ -60,16 +56,14 @@ else
         viewModel = new HomeViewModel(ProjectService);
     }
 
-    private void ShowCreateDialog()
+    private void NavigateToCreate()
     {
-        viewModel.ShowCreateDialog();
-        StateHasChanged();
+        Navigation.NavigateTo("/create-project");
     }
 
-    private void EditProject(Project project)
+    private void NavigateToEdit(Project project)
     {
-        viewModel.ShowEditDialog(project);
-        StateHasChanged();
+        Navigation.NavigateTo($"/edit-project/{project.Id}");
     }
 
     private void DeleteProject(Project project)
