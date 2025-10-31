@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Proyecto.csproj": {}
+    "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\Proyecto.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Proyecto.csproj": {
+    "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\Proyecto.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Proyecto.csproj",
+        "projectUniqueName": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\Proyecto.csproj",
         "projectName": "Proyecto",
-        "projectPath": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Proyecto.csproj",
-        "packagesPath": "C:\\Users\\bogad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\obj\\",
+        "projectPath": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\Proyecto.csproj",
+        "packagesPath": "C:\\Users\\jesic\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\bogad\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jesic\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -62,13 +62,13 @@
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.20, )",
+              "version": "[8.0.19, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.9, )",
+              "version": "[9.0.8, )",
               "autoReferenced": true
             }
           },
@@ -86,7 +86,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[8.0.20, 8.0.20]"
+              "version": "[8.0.19, 8.0.19]"
             }
           ],
           "frameworkReferences": {
@@ -94,7 +94,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {

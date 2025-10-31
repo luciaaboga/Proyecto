@@ -1,0 +1,395 @@
+@page "/editor/{ProjectId}"
+@using Proyecto.Models
+@using Proyecto.Contracts
+@inject NavigationManager Navigation
+@inject IProjectService ProjectService
+@inject IJSRuntime JSRuntime
+
+<h3>Editor de Imágenes - @ProjectActual?.Name</h3>
+
+<div class="editor-container">
+    <!-- Barra de herramientas superior -->
+    <div class="toolbar">
+        <button class="btn btn-secondary" @onclick="VolverAProyectos">
+            <i class="fas fa-arrow-left"></i> Volver a Mis Proyectos
+        </button>
+        <div class="toolbar-group">
+            <button class="btn btn-success" @onclick="GuardarProyecto" title="Guardar cambios">
+                <i class="fas fa-save"></i> Guardar Proyecto
+            </button>
+            <button class="btn btn-outline-warning" @onclick="ResetearFiltros" title="Resetear todos los filtros">
+                <i class="fas fa-undo"></i> Resetear
+            </button>
+            <button class="btn btn-info" @onclick="DescargarImagen" title="Descargar imagen editada">
+                <i class="fas fa-download"></i> Descargar
+            </button>
+        </div>
+    </div>
+
+    <!-- Información del proyecto -->
+    <div class="project-info">
+        <div class="project-meta">
+            <strong><i class="fas fa-file-alt"></i> Proyecto:</strong> @ProjectActual?.Name
+        </div>
+        <div class="project-meta">
+            <strong><i class="fas fa-calendar-plus"></i> Creado:</strong> @ProjectActual?.CreatedDate.ToString("dd/MM/yyyy HH:mm")
+        </div>
+        <div class="project-meta">
+            <strong><i class="fas fa-edit"></i> Modificado:</strong> @ProjectActual?.LastModified.ToString("dd/MM/yyyy HH:mm")
+        </div>
+    </div>
+
+    <!-- Área de trabajo -->
+    <div class="workspace">
+        <!-- Panel de imagen -->
+        <div class="image-panel">
+            <div class="image-container" id="imageContainer">
+                @if (!string.IsNullOrEmpty(ProjectActual?.ImagePath))
+                {
+                    <img src="@ProjectActual.ImagePath" 
+                         alt="@ProjectActual.Name" 
+                         class="editable-image"
+                         id="imageToEdit"
+                         style="@GetImageStyles()" />
+                }
+                else
+                {
+                    <div class="no-image">
+                        <i class="fas fa-image fa-3x"></i>
+                        <p>No hay imagen seleccionada</p>
+                        <p class="text-muted">Ve a "Mis Proyectos" y agrega una imagen primero</p>
+                    </div>
+                }
+            </div>
+            
+            <!-- Controles de zoom y navegación -->
+            <div class="image-controls">
+                <button class="btn btn-sm btn-outline" @onclick="ZoomOut" title="Zoom Out">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <span class="zoom-level">@((zoomLevel * 100).ToString("0"))%</span>
+                <button class="btn btn-sm btn-outline" @onclick="ZoomIn" title="Zoom In">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="btn btn-sm btn-outline" @onclick="ResetZoom" title="Zoom 100%">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel de controles -->
+        <div class="controls-panel">
+            <!-- Filtros básicos -->
+            <div class="control-section">
+                <h5><i class="fas fa-sliders-h"></i> Ajustes Básicos</h5>
+                
+                <div class="control-group">
+                    <label>
+                        <i class="fas fa-sun"></i> Brillo: 
+                        <span class="value-display">@brightness%</span>
+                    </label>
+                    <input type="range" min="0" max="200" @bind="brightness" @bind:event="oninput" 
+                           class="form-range filter-slider" />
+                    <div class="slider-labels">
+                        <span>0%</span>
+                        <span>100%</span>
+                        <span>200%</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>
+                        <i class="fas fa-adjust"></i> Contraste: 
+                        <span class="value-display">@contrast%</span>
+                    </label>
+                    <input type="range" min="0" max="200" @bind="contrast" @bind:event="oninput" 
+                           class="form-range filter-slider" />
+                    <div class="slider-labels">
+                        <span>0%</span>
+                        <span>100%</span>
+                        <span>200%</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>
+                        <i class="fas fa-palette"></i> Saturación: 
+                        <span class="value-display">@saturation%</span>
+                    </label>
+                    <input type="range" min="0" max="200" @bind="saturation" @bind:event="oninput" 
+                           class="form-range filter-slider" />
+                    <div class="slider-labels">
+                        <span>0%</span>
+                        <span>100%</span>
+                        <span>200%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transformaciones -->
+            <div class="control-section">
+                <h5><i class="fas fa-sync-alt"></i> Transformaciones</h5>
+                
+                <div class="control-group">
+                    <label><i class="fas fa-undo-alt"></i> Rotación</label>
+                    <div class="rotation-controls">
+                        <button class="btn btn-sm btn-outline-primary" @onclick="RotarIzquierda" title="Rotar 90° izquierda">
+                            <i class="fas fa-undo"></i> 90°
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="RotarDerecha" title="Rotar 90° derecha">
+                            <i class="fas fa-redo"></i> 90°
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" @onclick="Rotar180" title="Rotar 180°">
+                            <i class="fas fa-sync"></i> 180°
+                        </button>
+                    </div>
+                    <div class="rotation-display">
+                        <span>Ángulo: @rotation°</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label><i class="fas fa-arrows-alt-h"></i> Voltear</label>
+                    <div class="flip-controls">
+                        <button class="btn btn-sm @(flipHorizontal ? "btn-primary" : "btn-outline-secondary")" 
+                                @onclick="ToggleFlipHorizontal" title="Voltear horizontalmente">
+                            <i class="fas fa-arrows-alt-h"></i> Horizontal
+                        </button>
+                        <button class="btn btn-sm @(flipVertical ? "btn-primary" : "btn-outline-secondary")" 
+                                @onclick="ToggleFlipVertical" title="Voltear verticalmente">
+                            <i class="fas fa-arrows-alt-v"></i> Vertical
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros predefinidos -->
+<div class="control-section">
+    <h5><i class="fas fa-magic"></i> Filtros Rápidos</h5>
+    <div class="preset-filters">
+        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("normal"))">Normal</button>
+        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("vintage"))">Vintage</button>
+        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("bw"))">Blanco/Negro</button>
+        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("warm"))">Cálido</button>
+        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("cool"))">Frío</button>
+    </div>
+</div>
+
+            <!-- Información de la imagen -->
+            <div class="control-section">
+                <h5><i class="fas fa-info-circle"></i> Información</h5>
+                <div class="image-info">
+                    <div><strong>Brillo:</strong> @brightness%</div>
+                    <div><strong>Contraste:</strong> @contrast%</div>
+                    <div><strong>Saturación:</strong> @saturation%</div>
+                    <div><strong>Rotación:</strong> @rotation°</div>
+                    <div><strong>Volteo H:</strong> @(flipHorizontal ? "Sí" : "No")</div>
+                    <div><strong>Volteo V:</strong> @(flipVertical ? "Sí" : "No")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? ProjectId { get; set; }
+
+    private Project? ProjectActual { get; set; }
+    private string imagenOriginal = string.Empty;
+    
+    // Variables para filtros
+    private int brightness = 100;
+    private int contrast = 100;
+    private int saturation = 100;
+    private int rotation = 0;
+    private bool flipHorizontal = false;
+    private bool flipVertical = false;
+    private double zoomLevel = 1.0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProyecto();
+    }
+
+    private async Task CargarProyecto()
+    {
+        if (!string.IsNullOrEmpty(ProjectId) && Guid.TryParse(ProjectId, out Guid projectGuid))
+        {
+            ProjectActual = await ProjectService.GetProjectAsync(projectGuid);
+            if (ProjectActual != null)
+            {
+                // Cargar valores actuales
+                brightness = ProjectActual.Brightness;
+                contrast = ProjectActual.Contrast;
+                saturation = ProjectActual.Saturation;
+                rotation = ProjectActual.Rotation;
+                flipHorizontal = ProjectActual.FlipHorizontal;
+                flipVertical = ProjectActual.FlipVertical;
+                
+                imagenOriginal = ProjectActual.OriginalImagePath ?? ProjectActual.ImagePath;
+            }
+        }
+        
+        // Si no se encuentra, usar datos de ejemplo
+        if (ProjectActual == null)
+        {
+            ProjectActual = new Project 
+            { 
+                Id = Guid.TryParse(ProjectId, out Guid id) ? id : Guid.NewGuid(),
+                Name = "Mi Proyecto de Edición",
+                ImagePath = "https://via.placeholder.com/800x600/007bff/ffffff?text=Imagen+para+editar",
+                CreatedDate = DateTime.Now.AddDays(-1),
+                LastModified = DateTime.Now
+            };
+            imagenOriginal = ProjectActual.ImagePath;
+        }
+        
+        StateHasChanged();
+    }
+
+    private string GetImageStyles()
+    {
+        var styles = new List<string>();
+        
+        // Aplicar filtros CSS
+        styles.Add($"filter: brightness({brightness}%) contrast({contrast}%) saturate({saturation}%)");
+        
+        // Aplicar transformaciones
+        var transforms = new List<string>();
+        transforms.Add($"rotate({rotation}deg)");
+        if (flipHorizontal) transforms.Add("scaleX(-1)");
+        if (flipVertical) transforms.Add("scaleY(-1)");
+        transforms.Add($"scale({zoomLevel})");
+        
+        styles.Add($"transform: {string.Join(" ", transforms)}");
+        
+        return string.Join("; ", styles);
+    }
+
+    private async Task AplicarFiltros()
+    {
+        if (ProjectActual != null && !string.IsNullOrEmpty(ProjectId) && Guid.TryParse(ProjectId, out Guid projectGuid))
+        {
+            await ProjectService.ApplyFiltersAsync(projectGuid, brightness, contrast, saturation, rotation, flipHorizontal, flipVertical);
+            StateHasChanged();
+        }
+    }
+
+    private async Task ResetearFiltros()
+    {
+        brightness = 100;
+        contrast = 100;
+        saturation = 100;
+        rotation = 0;
+        flipHorizontal = false;
+        flipVertical = false;
+        zoomLevel = 1.0;
+        
+        if (ProjectActual != null && !string.IsNullOrEmpty(ProjectId) && Guid.TryParse(ProjectId, out Guid projectGuid))
+        {
+            await ProjectService.ResetFiltersAsync(projectGuid);
+            StateHasChanged();
+        }
+    }
+
+    private async Task GuardarProyecto()
+    {
+        if (ProjectActual != null)
+        {
+            ProjectActual.LastModified = DateTime.Now;
+            await ProjectService.UpdateProjectAsync(ProjectActual);
+            
+            // Mostrar mensaje de éxito
+            await JSRuntime.InvokeVoidAsync("alert", "¡Proyecto guardado correctamente!");
+        }
+    }
+
+    private async Task DescargarImagen()
+    {
+        if (ProjectActual != null && !string.IsNullOrEmpty(ProjectActual.ImagePath))
+        {
+            await JSRuntime.InvokeVoidAsync("downloadImage", ProjectActual.ImagePath, $"{ProjectActual.Name}-editado.jpg");
+        }
+    }
+
+    // Métodos de rotación
+    private async Task RotarIzquierda()
+    {
+        rotation = (rotation - 90) % 360;
+        await AplicarFiltros();
+    }
+
+    private async Task RotarDerecha()
+    {
+        rotation = (rotation + 90) % 360;
+        await AplicarFiltros();
+    }
+
+    private async Task Rotar180()
+    {
+        rotation = (rotation + 180) % 360;
+        await AplicarFiltros();
+    }
+
+    // Métodos de volteo
+    private async Task ToggleFlipHorizontal()
+    {
+        flipHorizontal = !flipHorizontal;
+        await AplicarFiltros();
+    }
+
+    private async Task ToggleFlipVertical()
+    {
+        flipVertical = !flipVertical;
+        await AplicarFiltros();
+    }
+
+    // Métodos de zoom
+    private void ZoomIn()
+    {
+        zoomLevel = Math.Min(zoomLevel + 0.1, 3.0);
+        StateHasChanged();
+    }
+
+    private void ZoomOut()
+    {
+        zoomLevel = Math.Max(zoomLevel - 0.1, 0.1);
+        StateHasChanged();
+    }
+
+    private void ResetZoom()
+    {
+        zoomLevel = 1.0;
+        StateHasChanged();
+    }
+
+    // Filtros predefinidos
+    private async Task AplicarFiltroPredeterminado(string filtro)
+    {
+        switch (filtro.ToLower())
+        {
+            case "normal":
+                brightness = 100; contrast = 100; saturation = 100;
+                break;
+            case "vintage":
+                brightness = 110; contrast = 90; saturation = 85;
+                break;
+            case "bw":
+                brightness = 100; contrast = 120; saturation = 0;
+                break;
+            case "warm":
+                brightness = 105; contrast = 95; saturation = 120;
+                break;
+            case "cool":
+                brightness = 95; contrast = 110; saturation = 80;
+                break;
+        }
+        await AplicarFiltros();
+    }
+
+    private void VolverAProyectos()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

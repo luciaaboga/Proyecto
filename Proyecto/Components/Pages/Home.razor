@@ -15,7 +15,7 @@
     </button>
 </div>
 
-@if (viewModel.Projects.Count == 0)
+@if (viewModel?.Projects?.Count == 0)
 {
     <div class="empty-state">
         <p>No tienes proyectos creados</p>
@@ -25,7 +25,7 @@
 else
 {
     <div class="projects-grid">
-        @foreach (var project in viewModel.Projects)
+        @foreach (var project in viewModel?.Projects ?? new List<Project>())
         {
             <div class="project-card">
                 <div class="project-thumbnail">
@@ -36,11 +36,22 @@ else
                     <p>Editado: @project.LastModified.ToString("dd/MM/yyyy")</p>
                 </div>
                 <div class="project-actions">
-                    <button class="btn btn-sm btn-outline" @onclick="() => NavigateToEdit(project)">
-                        Editar
+                    <!-- BOTÓN NUEVO: ABRIR EDITOR -->
+                    <button class="btn btn-sm btn-success" @onclick="() => OpenEditor(project.Id)" 
+                            title="Abrir en editor avanzado">
+                        🎨 Editor
                     </button>
-                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteProject(project)">
-                        Eliminar
+                    
+                    <!-- BOTÓN EXISTENTE: EDITAR PROYECTO -->
+                    <button class="btn btn-sm btn-outline" @onclick="() => NavigateToEdit(project)"
+                            title="Editar información del proyecto">
+                        ✏️ Editar
+                    </button>
+                    
+                    <!-- BOTÓN EXISTENTE: ELIMINAR -->
+                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteProject(project)"
+                            title="Eliminar proyecto">
+                        🗑️ Eliminar
                     </button>
                 </div>
             </div>
@@ -49,7 +60,7 @@ else
 }
 
 @code {
-    private HomeViewModel viewModel;
+    private HomeViewModel? viewModel;
 
     protected override void OnInitialized()
     {
@@ -66,9 +77,15 @@ else
         Navigation.NavigateTo($"/edit-project/{project.Id}");
     }
 
+    // MÉTODO NUEVO: ABRIR EDITOR
+    private void OpenEditor(Guid projectId)
+    {
+        Navigation.NavigateTo($"/editor/{projectId}");
+    }
+
     private void DeleteProject(Project project)
     {
-        viewModel.DeleteProject(project);
+        viewModel?.DeleteProject(project);
         StateHasChanged();
     }
 }

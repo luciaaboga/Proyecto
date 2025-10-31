@@ -58,6 +58,62 @@ namespace Proyecto.Services
             return _projects.FirstOrDefault(p => p.Id == projectId);
         }
 
+        // MÉTODOS ASÍNCRONOS NUEVOS
+        public async Task<Project?> GetProjectAsync(Guid projectId)
+        {
+            await Task.Delay(10);
+            return _projects.FirstOrDefault(p => p.Id == projectId);
+        }
+
+        public async Task UpdateProjectAsync(Project project)
+        {
+            await Task.Delay(10);
+            var existingProject = _projects.FirstOrDefault(p => p.Id == project.Id);
+            if (existingProject != null)
+            {
+                existingProject.Name = project.Name;
+                existingProject.ImagePath = project.ImagePath;
+                existingProject.Thumbnail = project.Thumbnail;
+                existingProject.LastModified = DateTime.Now;
+                SaveProjects();
+            }
+        }
+
+        // MÉTODOS PARA FILTROS
+        public async Task ApplyFiltersAsync(Guid projectId, int brightness, int contrast, int saturation, int rotation, bool flipH, bool flipV)
+        {
+            await Task.Delay(10);
+            var project = _projects.FirstOrDefault(p => p.Id == projectId);
+            if (project != null)
+            {
+                project.Brightness = brightness;
+                project.Contrast = contrast;
+                project.Saturation = saturation;
+                project.Rotation = rotation;
+                project.FlipHorizontal = flipH;
+                project.FlipVertical = flipV;
+                project.LastModified = DateTime.Now;
+                SaveProjects();
+            }
+        }
+
+        public async Task ResetFiltersAsync(Guid projectId)
+        {
+            await Task.Delay(10);
+            var project = _projects.FirstOrDefault(p => p.Id == projectId);
+            if (project != null)
+            {
+                project.Brightness = 100;
+                project.Contrast = 100;
+                project.Saturation = 100;
+                project.Rotation = 0;
+                project.FlipHorizontal = false;
+                project.FlipVertical = false;
+                project.LastModified = DateTime.Now;
+                SaveProjects();
+            }
+        }
+
         public async void SaveProjects()
         {
             await _localStorage.SetItemAsync(StorageKey, _projects);

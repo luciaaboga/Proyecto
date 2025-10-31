@@ -13,37 +13,41 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = browser
 build_property.RootNamespace = Proyecto
 build_property.RootNamespace = Proyecto
-build_property.ProjectDir = C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\
+build_property.ProjectDir = C:\Users\jesic\OneDrive\Escritorio\Proyecto\Proyecto\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = false
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto
+build_property.MSBuildProjectDirectory = C:\Users\jesic\OneDrive\Escritorio\Proyecto\Proyecto
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/App.razor]
+[C:/Users/jesic/OneDrive/Escritorio/Proyecto/Proyecto/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/Components/Pages/CreateEditProject.razor]
+[C:/Users/jesic/OneDrive/Escritorio/Proyecto/Proyecto/Components/Pages/CreateEditProject.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDcmVhdGVFZGl0UHJvamVjdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/Components/Pages/Home.razor]
+[C:/Users/jesic/OneDrive/Escritorio/Proyecto/Proyecto/Components/Pages/Editor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFZGl0b3IucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jesic/OneDrive/Escritorio/Proyecto/Proyecto/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/_Imports.razor]
+[C:/Users/jesic/OneDrive/Escritorio/Proyecto/Proyecto/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/Components/Layout/MainLayout.razor]
+[C:/Users/jesic/OneDrive/Escritorio/Proyecto/Proyecto/Components/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-fvgb3dpuzb
 
-[C:/Users/bogad/OneDrive/Documentos/GitHub/Proyecto/Proyecto/Components/Layout/NavMenu.razor]
+[C:/Users/jesic/OneDrive/Escritorio/Proyecto/Proyecto/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-4lum8fd4yv
