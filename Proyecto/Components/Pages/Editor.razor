@@ -1,193 +1,431 @@
 @page "/editor/{ProjectId}"
 @using Proyecto.Models
 @using Proyecto.Contracts
+@using Proyecto.ViewModels
+@using Proyecto.Services
 @inject NavigationManager Navigation
+@inject IEditorService EditorService
 @inject IProjectService ProjectService
 @inject IJSRuntime JSRuntime
 
-<h3>Editor de Imágenes - @ProjectActual?.Name</h3>
-
-<div class="editor-container">
-    <!-- Barra de herramientas superior -->
-    <div class="toolbar">
-        <button class="btn btn-secondary" @onclick="VolverAProyectos">
-            <i class="fas fa-arrow-left"></i> Volver a Mis Proyectos
-        </button>
-        <div class="toolbar-group">
-            <button class="btn btn-success" @onclick="GuardarProyecto" title="Guardar cambios">
-                <i class="fas fa-save"></i> Guardar Proyecto
+<div class="editor-layout">
+    <header class="editor-header">
+        <div class="header-left">
+            <button class="btn btn-outline" @onclick="VolverAProyectos" title="Volver a proyectos">
+                <i class="bi bi-arrow-left"></i>
+                Volver
             </button>
-            <button class="btn btn-outline-warning" @onclick="ResetearFiltros" title="Resetear todos los filtros">
-                <i class="fas fa-undo"></i> Resetear
-            </button>
-            <button class="btn btn-info" @onclick="DescargarImagen" title="Descargar imagen editada">
-                <i class="fas fa-download"></i> Descargar
-            </button>
+            <h2 class="project-title">@(viewModel.CurrentProject?.Name ?? "Editor")</h2>
         </div>
-    </div>
 
-    <!-- Información del proyecto -->
-    <div class="project-info">
-        <div class="project-meta">
-            <strong><i class="fas fa-file-alt"></i> Proyecto:</strong> @ProjectActual?.Name
+        <div class="header-actions">
+            <button class="btn btn-secondary" @onclick="ResetearFiltros" title="Resetear todo">
+                <i class="bi bi-arrow-clockwise"></i>
+                Resetear
+            </button>
+            <button class="btn btn-primary" @onclick="GuardarProyecto" title="Guardar cambios">
+                <i class="bi bi-check-circle"></i>
+                Guardar
+            </button>
+            <button class="btn btn-success" @onclick="DescargarImagen" title="Descargar imagen editada">
+                <i class="bi bi-download"></i>
+                Descargar
+            </button>
         </div>
-        <div class="project-meta">
-            <strong><i class="fas fa-calendar-plus"></i> Creado:</strong> @ProjectActual?.CreatedDate.ToString("dd/MM/yyyy HH:mm")
-        </div>
-        <div class="project-meta">
-            <strong><i class="fas fa-edit"></i> Modificado:</strong> @ProjectActual?.LastModified.ToString("dd/MM/yyyy HH:mm")
-        </div>
-    </div>
+    </header>
 
-    <!-- Área de trabajo -->
-    <div class="workspace">
-        <!-- Panel de imagen -->
-        <div class="image-panel">
-            <div class="image-container" id="imageContainer">
-                @if (!string.IsNullOrEmpty(ProjectActual?.ImagePath))
+    <div class="editor-content">
+        <aside class="controls-panel">
+            <nav class="controls-nav">
+                <button class="nav-btn @(viewModel.ActiveTab == "filters" ? "active" : "")"
+                        @onclick='() => viewModel.SetActiveTab("filters")'>
+                    <i class="bi bi-sliders"></i>
+                    <span>Filtros</span>
+                </button>
+                <button class="nav-btn @(viewModel.ActiveTab == "adjust" ? "active" : "")"
+                        @onclick='() => viewModel.SetActiveTab("adjust")'>
+                    <i class="bi bi-tools"></i>
+                    <span>Ajustes</span>
+                </button>
+                <button class="nav-btn @(viewModel.ActiveTab == "transform" ? "active" : "")"
+                        @onclick='() => viewModel.SetActiveTab("transform")'>
+                    <i class="bi bi-arrow-repeat"></i>
+                    <span>Transformar</span>
+                </button>
+                <button class="nav-btn @(viewModel.ActiveTab == "stickers" ? "active" : "")"
+                        @onclick='() => viewModel.SetActiveTab("stickers")'>
+                    <i class="bi bi-stars"></i>
+                    <span>Stickers</span>
+                </button>
+                <button class="nav-btn @(viewModel.ActiveTab == "text" ? "active" : "")"
+                        @onclick='() => viewModel.SetActiveTab("text")'>
+                    <i class="bi bi-fonts"></i>
+                    <span>Texto</span>
+                </button>
+            </nav>
+        </aside>
+
+        <div class="content-panel @(viewModel.ActiveTab != "" ? "expanded" : "")">
+            <div class="panel-content">
+                @if (viewModel.ActiveTab == "filters")
                 {
-                    <img src="@ProjectActual.ImagePath" 
-                         alt="@ProjectActual.Name" 
-                         class="editable-image"
-                         id="imageToEdit"
-                         style="@GetImageStyles()" />
+                    <div class="tab-content">
+                        <h4>Filtros Rápidos</h4>
+                        <div class="filters-grid">
+                            <button class="filter-preset" @onclick='() => AplicarFiltroPredeterminado("normal")'>
+                                <div class="filter-preview normal"></div>
+                                <span>Normal</span>
+                            </button>
+                            <button class="filter-preset" @onclick='() => AplicarFiltroPredeterminado("vintage")'>
+                                <div class="filter-preview vintage"></div>
+                                <span>Vintage</span>
+                            </button>
+                            <button class="filter-preset" @onclick='() => AplicarFiltroPredeterminado("bw")'>
+                                <div class="filter-preview bw"></div>
+                                <span>Blanco/Negro</span>
+                            </button>
+                            <button class="filter-preset" @onclick='() => AplicarFiltroPredeterminado("warm")'>
+                                <div class="filter-preview warm"></div>
+                                <span>Cálido</span>
+                            </button>
+                            <button class="filter-preset" @onclick='() => AplicarFiltroPredeterminado("cool")'>
+                                <div class="filter-preview cool"></div>
+                                <span>Frío</span>
+                            </button>
+                            <button class="filter-preset" @onclick='() => AplicarFiltroPredeterminado("blue")'>
+                                <div class="filter-preview blue"></div>
+                                <span>Azul</span>
+                            </button>
+                            <button class="filter-preset" @onclick='() => AplicarFiltroPredeterminado("red")'>
+                                <div class="filter-preview red"></div>
+                                <span>Rojo</span>
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                @if (viewModel.ActiveTab == "adjust")
+                {
+                    <div class="tab-content">
+                        <h4>Ajustes Básicos</h4>
+
+                        <div class="control-item">
+                            <label>
+                                <i class="bi bi-brightness-high"></i>
+                                Brillo
+                                <span class="value">@viewModel.EditorState.Brightness%</span>
+                            </label>
+                            <input type="range" min="0" max="200"
+                                   @bind="viewModel.EditorState.Brightness"
+                                   @bind:event="oninput"
+                                   @onchange="AplicarFiltros"
+                                   class="control-slider" />
+                        </div>
+
+                        <div class="control-item">
+                            <label>
+                                <i class="bi bi-contrast"></i>
+                                Contraste
+                                <span class="value">@viewModel.EditorState.Contrast%</span>
+                            </label>
+                            <input type="range" min="0" max="200"
+                                   @bind="viewModel.EditorState.Contrast"
+                                   @bind:event="oninput"
+                                   @onchange="AplicarFiltros"
+                                   class="control-slider" />
+                        </div>
+
+                        <div class="control-item">
+                            <label>
+                                <i class="bi bi-droplet"></i>
+                                Saturación
+                                <span class="value">@viewModel.EditorState.Saturation%</span>
+                            </label>
+                            <input type="range" min="0" max="200"
+                                   @bind="viewModel.EditorState.Saturation"
+                                   @bind:event="oninput"
+                                   @onchange="AplicarFiltros"
+                                   class="control-slider" />
+                        </div>
+                    </div>
+                }
+
+                @if (viewModel.ActiveTab == "transform")
+                {
+                    <div class="tab-content">
+                        <h4>Transformaciones</h4>
+                        <div class="control-group">
+                            <label>
+                                <i class="bi bi-crop"></i>
+                                Recortar Imagen
+                            </label>
+                            <div class="crop-controls">
+                                <button class="btn btn-sm @(viewModel.EditorState.IsCropping ? "btn-primary" : "btn-outline")" 
+                                        @onclick="ToggleCropping">
+                                    @(viewModel.EditorState.IsCropping ? "Desactivar Recorte" : "Activar Recorte")
+                                </button>
+                
+                                @if (viewModel.EditorState.IsCropping)
+                                {
+                                    <button class="btn btn-sm btn-success" @onclick="AplicarRecorte">
+                                        <i class="bi bi-check"></i>
+                                        Aplicar Recorte
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" @onclick="CancelarRecorte">
+                                        <i class="bi bi-x"></i>
+                                        Cancelar
+                                    </button>
+
+                                    <div class="crop-dimensions">
+                                        <div class="dimension-input">
+                                            <label>X:</label>
+                                            <input type="number" @bind="viewModel.EditorState.CropArea.X"
+                                                   @bind:event="oninput" class="form-control-sm" />
+                                        </div>
+                                        <div class="dimension-input">
+                                            <label>Y:</label>
+                                            <input type="number" @bind="viewModel.EditorState.CropArea.Y"
+                                                   @bind:event="oninput" class="form-control-sm" />
+                                        </div>
+                                        <div class="dimension-input">
+                                            <label>Ancho:</label>
+                                            <input type="number" @bind="viewModel.EditorState.CropArea.Width"
+                                                   @bind:event="oninput" class="form-control-sm" />
+                                        </div>
+                                        <div class="dimension-input">
+                                            <label>Alto:</label>
+                                            <input type="number" @bind="viewModel.EditorState.CropArea.Height"
+                                                   @bind:event="oninput" class="form-control-sm" />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Rotación</label>
+                            <div class="button-group">
+                                <button class="btn btn-sm btn-outline" @onclick="RotarIzquierda">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                    90°
+                                </button>
+                                <button class="btn btn-sm btn-outline" @onclick="RotarDerecha">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                    90°
+                                </button>
+                                <button class="btn btn-sm btn-outline" @onclick="Rotar180">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                    180°
+                                </button>
+                            </div>
+                            <div class="rotation-display">
+                                Ángulo: @viewModel.EditorState.Rotation°
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Voltear</label>
+                            <div class="button-group">
+                                <button class="btn btn-sm @(viewModel.EditorState.FlipHorizontal ? "btn-primary" : "btn-outline")" 
+                                        @onclick="ToggleFlipHorizontal">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                    Horizontal
+                                </button>
+                                <button class="btn btn-sm @(viewModel.EditorState.FlipVertical ? "btn-primary" : "btn-outline")" 
+                                        @onclick="ToggleFlipVertical">
+                                    <i class="bi bi-arrow-up-down"></i>
+                                    Vertical
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (viewModel.ActiveTab == "stickers")
+                {
+                    <div class="tab-content">
+                        <h4>Stickers</h4>
+                        <div class="stickers-grid">
+                            <div class="sticker-category">
+                                <h5>Emojis</h5>
+                                <div class="stickers-list">
+                                    <button class="sticker-item" @onclick='() => AgregarSticker(" 😊")'>😊</button>
+                                    <button class="sticker-item" @onclick='() => AgregarSticker(" ❤️")'>❤️</button>
+                                    <button class="sticker-item" @onclick='() => AgregarSticker(" ⭐")'>⭐</button>
+                                    <button class="sticker-item" @onclick='() => AgregarSticker(" 🎉")'>🎉</button>
+                                    <button class="sticker-item" @onclick='() => AgregarSticker(" 🔥")'>🔥</button>
+                                    <button class="sticker-item" @onclick='() => AgregarSticker(" 🌟")'>🌟</button>
+                                </div>
+                            </div>
+
+                            <div class="sticker-actions">
+                                <button class="btn btn-sm btn-outline" @onclick="EliminarTodosStickers">
+                                    <i class="bi bi-trash"></i> Eliminar Todos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (viewModel.ActiveTab == "text")
+                {
+                    <div class="tab-content">
+                        <h4>Agregar Texto</h4>
+                        <div class="text-controls">
+                            <input type="text" class="form-control" placeholder="Escribe tu texto..."
+                                   @bind="nuevoTexto" @bind:event="oninput" />
+
+                            <div class="text-options">
+                                <label>Tamaño:</label>
+                                <input type="range" min="12" max="72" @bind="tamanoTexto" @bind:event="oninput"
+                                       class="text-size-slider" />
+                                <!--<span>@tamanoTextopx</span>-->
+                            </div>
+
+                            <div class="text-options">
+                                <label>Color:</label>
+                                <input type="color" @bind="colorTexto" class="color-picker" />
+                            </div>
+
+                            <div class="text-options">
+                                <button class="btn btn-sm @(textoNegrita ? "btn-primary" : "btn-outline")"
+                                        @onclick="() => textoNegrita = !textoNegrita">
+                                    <i class="bi bi-type-bold"></i>
+                                </button>
+                                <button class="btn btn-sm @(textoItalica ? "btn-primary" : "btn-outline")"
+                                        @onclick="() => textoItalica = !textoItalica">
+                                    <i class="bi bi-type-italic"></i>
+                                </button>
+                            </div>
+
+                            <button class="btn btn-primary btn-sm" @onclick="AgregarTexto">
+                                <i class="bi bi-plus-circle"></i>
+                                Agregar Texto
+                            </button>
+
+                            <div class="text-actions" style="margin-top: 1rem;">
+                                <button class="btn btn-sm btn-outline" @onclick="EliminarTodosTextos">
+                                    <i class="bi bi-trash"></i> Eliminar Todos los Textos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <main class="image-area">
+            <div class="image-container" @onmousemove="HandleMouseMove" @onmouseup="HandleMouseUp">
+                @if (!string.IsNullOrEmpty(viewModel.CurrentProject?.ImagePath))
+                {
+                    <div class="image-wrapper" style="transform: scale(@zoomLevel); transform-origin: center;">
+                        <img src="@viewModel.CurrentProject.ImagePath"
+                             alt="@viewModel.CurrentProject.Name"
+                             class="editable-image"
+                             style="@GetImageStyles()" />
+
+                        @if (viewModel.EditorState.IsCropping)
+                        {
+                            <div class="crop-overlay">
+                                <div class="crop-area"
+                                     style="left: @(viewModel.EditorState.CropArea.X)px;
+                                            top: @(viewModel.EditorState.CropArea.Y)px;
+                                            width: @(viewModel.EditorState.CropArea.Width)px;
+                                            height: @(viewModel.EditorState.CropArea.Height)px;"
+                                     @onmousedown="@((e) => StartCropDragging("move", e))">
+
+                                    <div class="crop-handle top" @onmousedown="@((e) => StartCropDragging("top", e))"></div>
+                                    <div class="crop-handle bottom" @onmousedown="@((e) => StartCropDragging("bottom", e))"></div>
+                                    <div class="crop-handle left" @onmousedown="@((e) => StartCropDragging("left", e))"></div>
+                                    <div class="crop-handle right" @onmousedown="@((e) => StartCropDragging("right", e))"></div>
+                                    <div class="crop-handle top-left" @onmousedown="@((e) => StartCropDragging("top-left", e))"></div>
+                                    <div class="crop-handle top-right" @onmousedown="@((e) => StartCropDragging("top-right", e))"></div>
+                                    <div class="crop-handle bottom-left" @onmousedown="@((e) => StartCropDragging("bottom-left", e))"></div>
+                                    <div class="crop-handle bottom-right" @onmousedown="@((e) => StartCropDragging("bottom-right", e))"></div>
+                                </div>
+                            </div>
+                        }
+
+                        @foreach (var sticker in viewModel.EditorState.Stickers)
+                        {
+                            <div class="sticker-overlay"
+                                 style="left: @(sticker.X)px; top: @(sticker.Y)px; transform: scale(@sticker.ScaleX, @sticker.ScaleY) rotate(@(sticker.Rotation)deg);"
+                                 @onmousedown="@((e) => StartDragging(sticker, e))">
+
+                                @if (sticker.Content.StartsWith("http"))
+                                {
+                                    <img src="@sticker.Content" class="sticker-img" />
+                                }
+                                else
+                                {
+                                    <span class="sticker-emoji">@sticker.Content</span>
+                                }
+
+                                <div class="resize-handle width-handle"
+                                     @onmousedown="@((e) => StartResizingWidth(sticker, e))"></div>
+
+                                <div class="resize-handle height-handle"
+                                     @onmousedown="@((e) => StartResizingHeight(sticker, e))"></div>
+
+                                <div class="resize-handle both-handle"
+                                     @onmousedown="@((e) => StartResizingBoth(sticker, e))"></div>
+
+                                <button class="delete-handle"
+                                        @onclick="@(() => EliminarSticker(sticker))"
+                                        title="Eliminar sticker">
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+                        }
+
+                        @foreach (var textElement in viewModel.EditorState.TextElements)
+                        {
+                            <div class="text-overlay"
+                                 style="left: @(textElement.X)px; top: @(textElement.Y)px; transform: scale(@textElement.ScaleX, @textElement.ScaleY) rotate(@(textElement.Rotation)deg); color: @textElement.Color; font-family: @textElement.FontFamily; font-size: @(textElement.FontSize)px; font-weight: @(textElement.IsBold ? "bold" : "normal"); font-style: @(textElement.IsItalic ? "italic" : "normal");"
+                                 @onmousedown="@((e) => StartDragging(textElement, e))">
+
+                                @textElement.Text
+
+                                <div class="resize-handle width-handle"
+                                     @onmousedown="@((e) => StartResizingWidth(textElement, e))"></div>
+
+                                <div class="resize-handle height-handle"
+                                     @onmousedown="@((e) => StartResizingHeight(textElement, e))"></div>
+
+                                <div class="resize-handle both-handle"
+                                     @onmousedown="@((e) => StartResizingBoth(textElement, e))"></div>
+
+                                <button class="delete-handle"
+                                        @onclick="@(() => EliminarTexto(textElement))"
+                                        title="Eliminar texto">
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
                 }
                 else
                 {
                     <div class="no-image">
-                        <i class="fas fa-image fa-3x"></i>
-                        <p>No hay imagen seleccionada</p>
-                        <p class="text-muted">Ve a "Mis Proyectos" y agrega una imagen primero</p>
+                        <i class="bi bi-image"></i>
+                        <p>No hay imagen para editar</p>
                     </div>
                 }
             </div>
-            
-            <!-- Controles de zoom y navegación -->
-            <div class="image-controls">
-                <button class="btn btn-sm btn-outline" @onclick="ZoomOut" title="Zoom Out">
-                    <i class="fas fa-search-minus"></i>
+
+            <div class="zoom-controls">
+                <button class="btn btn-sm btn-outline" @onclick="ZoomOut" title="Alejar">
+                    <i class="bi bi-dash"></i>
                 </button>
                 <span class="zoom-level">@((zoomLevel * 100).ToString("0"))%</span>
-                <button class="btn btn-sm btn-outline" @onclick="ZoomIn" title="Zoom In">
-                    <i class="fas fa-search-plus"></i>
+                <button class="btn btn-sm btn-outline" @onclick="ZoomIn" title="Acercar">
+                    <i class="bi bi-plus"></i>
                 </button>
-                <button class="btn btn-sm btn-outline" @onclick="ResetZoom" title="Zoom 100%">
-                    <i class="fas fa-expand-arrows-alt"></i>
+                <button class="btn btn-sm btn-outline" @onclick="ResetZoom" title="Tamaño original">
+                    <i class="bi bi-fullscreen"></i>
                 </button>
             </div>
-        </div>
-
-        <!-- Panel de controles -->
-        <div class="controls-panel">
-            <!-- Filtros básicos -->
-            <div class="control-section">
-                <h5><i class="fas fa-sliders-h"></i> Ajustes Básicos</h5>
-                
-                <div class="control-group">
-                    <label>
-                        <i class="fas fa-sun"></i> Brillo: 
-                        <span class="value-display">@brightness%</span>
-                    </label>
-                    <input type="range" min="0" max="200" @bind="brightness" @bind:event="oninput" 
-                           class="form-range filter-slider" />
-                    <div class="slider-labels">
-                        <span>0%</span>
-                        <span>100%</span>
-                        <span>200%</span>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label>
-                        <i class="fas fa-adjust"></i> Contraste: 
-                        <span class="value-display">@contrast%</span>
-                    </label>
-                    <input type="range" min="0" max="200" @bind="contrast" @bind:event="oninput" 
-                           class="form-range filter-slider" />
-                    <div class="slider-labels">
-                        <span>0%</span>
-                        <span>100%</span>
-                        <span>200%</span>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label>
-                        <i class="fas fa-palette"></i> Saturación: 
-                        <span class="value-display">@saturation%</span>
-                    </label>
-                    <input type="range" min="0" max="200" @bind="saturation" @bind:event="oninput" 
-                           class="form-range filter-slider" />
-                    <div class="slider-labels">
-                        <span>0%</span>
-                        <span>100%</span>
-                        <span>200%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Transformaciones -->
-            <div class="control-section">
-                <h5><i class="fas fa-sync-alt"></i> Transformaciones</h5>
-                
-                <div class="control-group">
-                    <label><i class="fas fa-undo-alt"></i> Rotación</label>
-                    <div class="rotation-controls">
-                        <button class="btn btn-sm btn-outline-primary" @onclick="RotarIzquierda" title="Rotar 90° izquierda">
-                            <i class="fas fa-undo"></i> 90°
-                        </button>
-                        <button class="btn btn-sm btn-outline-primary" @onclick="RotarDerecha" title="Rotar 90° derecha">
-                            <i class="fas fa-redo"></i> 90°
-                        </button>
-                        <button class="btn btn-sm btn-outline-secondary" @onclick="Rotar180" title="Rotar 180°">
-                            <i class="fas fa-sync"></i> 180°
-                        </button>
-                    </div>
-                    <div class="rotation-display">
-                        <span>Ángulo: @rotation°</span>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label><i class="fas fa-arrows-alt-h"></i> Voltear</label>
-                    <div class="flip-controls">
-                        <button class="btn btn-sm @(flipHorizontal ? "btn-primary" : "btn-outline-secondary")" 
-                                @onclick="ToggleFlipHorizontal" title="Voltear horizontalmente">
-                            <i class="fas fa-arrows-alt-h"></i> Horizontal
-                        </button>
-                        <button class="btn btn-sm @(flipVertical ? "btn-primary" : "btn-outline-secondary")" 
-                                @onclick="ToggleFlipVertical" title="Voltear verticalmente">
-                            <i class="fas fa-arrows-alt-v"></i> Vertical
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Filtros predefinidos -->
-<div class="control-section">
-    <h5><i class="fas fa-magic"></i> Filtros Rápidos</h5>
-    <div class="preset-filters">
-        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("normal"))">Normal</button>
-        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("vintage"))">Vintage</button>
-        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("bw"))">Blanco/Negro</button>
-        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("warm"))">Cálido</button>
-        <button class="btn btn-sm btn-outline" @onclick="@(async () => await AplicarFiltroPredeterminado("cool"))">Frío</button>
-    </div>
-</div>
-
-            <!-- Información de la imagen -->
-            <div class="control-section">
-                <h5><i class="fas fa-info-circle"></i> Información</h5>
-                <div class="image-info">
-                    <div><strong>Brillo:</strong> @brightness%</div>
-                    <div><strong>Contraste:</strong> @contrast%</div>
-                    <div><strong>Saturación:</strong> @saturation%</div>
-                    <div><strong>Rotación:</strong> @rotation°</div>
-                    <div><strong>Volteo H:</strong> @(flipHorizontal ? "Sí" : "No")</div>
-                    <div><strong>Volteo V:</strong> @(flipVertical ? "Sí" : "No")</div>
-                </div>
-            </div>
-        </div>
+        </main>
     </div>
 </div>
 
@@ -195,20 +433,41 @@
     [Parameter]
     public string? ProjectId { get; set; }
 
-    private Project? ProjectActual { get; set; }
-    private string imagenOriginal = string.Empty;
-    
-    // Variables para filtros
-    private int brightness = 100;
-    private int contrast = 100;
-    private int saturation = 100;
-    private int rotation = 0;
-    private bool flipHorizontal = false;
-    private bool flipVertical = false;
+    private EditorViewModel viewModel = null!;
     private double zoomLevel = 1.0;
 
+    // Variables para arrastre
+    private bool isDragging = false;
+    private object draggedElement = null;
+    private double dragStartX, dragStartY;
+    private double elementStartX, elementStartY;
+
+    // Variables para redimensionamiento
+    private bool isResizing = false;
+    private bool isResizingWidth = false;
+    private bool isResizingHeight = false;
+    private bool isResizingBoth = false;
+    private object resizedElement = null;
+    private double resizeStartX, resizeStartY;
+    private double elementStartScale;
+    private double elementStartScaleX, elementStartScaleY;
+
+    // Variables para texto
+    private string nuevoTexto = "";
+    private string colorTexto = "#000000";
+    private int tamanoTexto = 24;
+    private bool textoNegrita = false;
+    private bool textoItalica = false;
+
+    // Variables para recorte
+    private bool isCropDragging = false;
+    private double cropStartX, cropStartY;
+    private double cropAreaStartX, cropAreaStartY, cropAreaStartWidth, cropAreaStartHeight;
+
+    // ========== MÉTODOS DE INICIALIZACIÓN ==========
     protected override async Task OnInitializedAsync()
     {
+        viewModel = new EditorViewModel(EditorService, ProjectService);
         await CargarProyecto();
     }
 
@@ -216,145 +475,133 @@
     {
         if (!string.IsNullOrEmpty(ProjectId) && Guid.TryParse(ProjectId, out Guid projectGuid))
         {
-            ProjectActual = await ProjectService.GetProjectAsync(projectGuid);
-            if (ProjectActual != null)
-            {
-                // Cargar valores actuales
-                brightness = ProjectActual.Brightness;
-                contrast = ProjectActual.Contrast;
-                saturation = ProjectActual.Saturation;
-                rotation = ProjectActual.Rotation;
-                flipHorizontal = ProjectActual.FlipHorizontal;
-                flipVertical = ProjectActual.FlipVertical;
-                
-                imagenOriginal = ProjectActual.OriginalImagePath ?? ProjectActual.ImagePath;
-            }
+            await viewModel.LoadProjectAsync(projectGuid);
+            StateHasChanged();
         }
-        
-        // Si no se encuentra, usar datos de ejemplo
-        if (ProjectActual == null)
-        {
-            ProjectActual = new Project 
-            { 
-                Id = Guid.TryParse(ProjectId, out Guid id) ? id : Guid.NewGuid(),
-                Name = "Mi Proyecto de Edición",
-                ImagePath = "https://via.placeholder.com/800x600/007bff/ffffff?text=Imagen+para+editar",
-                CreatedDate = DateTime.Now.AddDays(-1),
-                LastModified = DateTime.Now
-            };
-            imagenOriginal = ProjectActual.ImagePath;
-        }
-        
-        StateHasChanged();
     }
 
+    // ========== MÉTODOS DE IMAGEN Y ESTILOS ==========
     private string GetImageStyles()
     {
         var styles = new List<string>();
-        
-        // Aplicar filtros CSS
-        styles.Add($"filter: brightness({brightness}%) contrast({contrast}%) saturate({saturation}%)");
-        
-        // Aplicar transformaciones
         var transforms = new List<string>();
-        transforms.Add($"rotate({rotation}deg)");
-        if (flipHorizontal) transforms.Add("scaleX(-1)");
-        if (flipVertical) transforms.Add("scaleY(-1)");
+
+        styles.Add($"filter: brightness({viewModel.EditorState.Brightness}%) contrast({viewModel.EditorState.Contrast}%) saturate({viewModel.EditorState.Saturation}%)");
+        transforms.Add($"rotate({viewModel.EditorState.Rotation}deg)");
+        if (viewModel.EditorState.FlipHorizontal) transforms.Add("scaleX(-1)");
+        if (viewModel.EditorState.FlipVertical) transforms.Add("scaleY(-1)");
         transforms.Add($"scale({zoomLevel})");
-        
         styles.Add($"transform: {string.Join(" ", transforms)}");
-        
+
         return string.Join("; ", styles);
     }
 
+    // ========== MÉTODOS DE FILTROS Y TRANSFORMACIONES ==========
     private async Task AplicarFiltros()
     {
-        if (ProjectActual != null && !string.IsNullOrEmpty(ProjectId) && Guid.TryParse(ProjectId, out Guid projectGuid))
-        {
-            await ProjectService.ApplyFiltersAsync(projectGuid, brightness, contrast, saturation, rotation, flipHorizontal, flipVertical);
-            StateHasChanged();
-        }
+        await viewModel.ApplyFiltersAsync();
+        StateHasChanged();
     }
 
     private async Task ResetearFiltros()
     {
-        brightness = 100;
-        contrast = 100;
-        saturation = 100;
-        rotation = 0;
-        flipHorizontal = false;
-        flipVertical = false;
-        zoomLevel = 1.0;
-        
-        if (ProjectActual != null && !string.IsNullOrEmpty(ProjectId) && Guid.TryParse(ProjectId, out Guid projectGuid))
-        {
-            await ProjectService.ResetFiltersAsync(projectGuid);
-            StateHasChanged();
-        }
+        await viewModel.ResetFiltersAsync();
+        StateHasChanged();
     }
 
     private async Task GuardarProyecto()
     {
-        if (ProjectActual != null)
-        {
-            ProjectActual.LastModified = DateTime.Now;
-            await ProjectService.UpdateProjectAsync(ProjectActual);
-            
-            // Mostrar mensaje de éxito
-            await JSRuntime.InvokeVoidAsync("alert", "¡Proyecto guardado correctamente!");
-        }
+        await AplicarFiltros();
+        await JSRuntime.InvokeVoidAsync("alert", "¡Proyecto guardado correctamente!");
     }
 
     private async Task DescargarImagen()
     {
-        if (ProjectActual != null && !string.IsNullOrEmpty(ProjectActual.ImagePath))
+        if (viewModel.CurrentProject != null)
         {
-            await JSRuntime.InvokeVoidAsync("downloadImage", ProjectActual.ImagePath, $"{ProjectActual.Name}-editado.jpg");
+            try
+            {
+                var filters = new
+                {
+                    brightness = viewModel.EditorState.Brightness,
+                    contrast = viewModel.EditorState.Contrast,
+                    saturation = viewModel.EditorState.Saturation
+                };
+
+                var transformations = new
+                {
+                    rotation = viewModel.EditorState.Rotation,
+                    flipHorizontal = viewModel.EditorState.FlipHorizontal,
+                    flipVertical = viewModel.EditorState.FlipVertical
+                };
+
+                await JSRuntime.InvokeVoidAsync(
+                    "downloadEditedImage",
+                    viewModel.CurrentProject.ImagePath,
+                    viewModel.EditorState.Stickers,
+                    viewModel.EditorState.TextElements,
+                    filters,
+                    transformations,
+                    $"{viewModel.CurrentProject.Name}-editado.png"
+                );
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync(
+                    "downloadImage",
+                    viewModel.CurrentProject.ImagePath,
+                    $"{viewModel.CurrentProject.Name}.png"
+                );
+            }
         }
     }
 
-    // Métodos de rotación
     private async Task RotarIzquierda()
     {
-        rotation = (rotation - 90) % 360;
+        viewModel.SetRotation((viewModel.EditorState.Rotation - 90) % 360);
         await AplicarFiltros();
     }
 
     private async Task RotarDerecha()
     {
-        rotation = (rotation + 90) % 360;
+        viewModel.SetRotation((viewModel.EditorState.Rotation + 90) % 360);
         await AplicarFiltros();
     }
 
     private async Task Rotar180()
     {
-        rotation = (rotation + 180) % 360;
+        viewModel.SetRotation((viewModel.EditorState.Rotation + 180) % 360);
         await AplicarFiltros();
     }
 
-    // Métodos de volteo
     private async Task ToggleFlipHorizontal()
     {
-        flipHorizontal = !flipHorizontal;
+        viewModel.ToggleFlipHorizontal();
         await AplicarFiltros();
     }
 
     private async Task ToggleFlipVertical()
     {
-        flipVertical = !flipVertical;
+        viewModel.ToggleFlipVertical();
         await AplicarFiltros();
     }
 
-    // Métodos de zoom
+    private async Task AplicarFiltroPredeterminado(string filtro)
+    {
+        viewModel.ApplyPresetFilter(filtro);
+        await AplicarFiltros();
+    }
+
+    // ========== MÉTODOS DE ZOOM ==========
     private void ZoomIn()
     {
-        zoomLevel = Math.Min(zoomLevel + 0.1, 3.0);
+        zoomLevel = Math.Min(zoomLevel + 0.25, 4.0);
         StateHasChanged();
     }
 
     private void ZoomOut()
     {
-        zoomLevel = Math.Max(zoomLevel - 0.1, 0.1);
+        zoomLevel = Math.Max(zoomLevel - 0.25, 0.25);
         StateHasChanged();
     }
 
@@ -364,32 +611,408 @@
         StateHasChanged();
     }
 
-    // Filtros predefinidos
-    private async Task AplicarFiltroPredeterminado(string filtro)
-    {
-        switch (filtro.ToLower())
-        {
-            case "normal":
-                brightness = 100; contrast = 100; saturation = 100;
-                break;
-            case "vintage":
-                brightness = 110; contrast = 90; saturation = 85;
-                break;
-            case "bw":
-                brightness = 100; contrast = 120; saturation = 0;
-                break;
-            case "warm":
-                brightness = 105; contrast = 95; saturation = 120;
-                break;
-            case "cool":
-                brightness = 95; contrast = 110; saturation = 80;
-                break;
-        }
-        await AplicarFiltros();
-    }
-
     private void VolverAProyectos()
     {
         Navigation.NavigateTo("/");
+    }
+
+    // ========== MÉTODOS DE STICKERS ==========
+    private void AgregarSticker(string emoji)
+    {
+        var nuevoSticker = new StickerElement
+        {
+            Content = emoji,
+            X = 100,
+            Y = 100,
+            ScaleX = 1.0,  
+            ScaleY = 1.0,  
+            Rotation = 0
+        };
+
+        viewModel.EditorState.Stickers.Add(nuevoSticker);
+        StateHasChanged();
+    }
+
+    private void EliminarSticker(StickerElement sticker)
+    {
+        viewModel.EditorState.Stickers.Remove(sticker);
+        StateHasChanged();
+    }
+
+    private void EliminarTodosStickers()
+    {
+        viewModel.EditorState.Stickers.Clear();
+        StateHasChanged();
+    }
+
+    // ========== MÉTODOS DE TEXTO ==========
+    private void AgregarTexto()
+    {
+        if (!string.IsNullOrEmpty(nuevoTexto))
+        {
+            var nuevoElementoTexto = new TextElement
+            {
+                Text = nuevoTexto,
+                Color = colorTexto,
+                FontSize = tamanoTexto,
+                IsBold = textoNegrita,
+                IsItalic = textoItalica,
+                X = 50,
+                Y = 50,
+                ScaleX = 1.0, 
+                ScaleY = 1.0, 
+                Rotation = 0
+            };
+
+            viewModel.EditorState.TextElements.Add(nuevoElementoTexto);
+            nuevoTexto = "";
+            StateHasChanged();
+        }
+    }
+
+    private void EliminarTexto(TextElement texto)
+    {
+        viewModel.EditorState.TextElements.Remove(texto);
+        StateHasChanged();
+    }
+
+    private void EliminarTodosTextos()
+    {
+        viewModel.EditorState.TextElements.Clear();
+        StateHasChanged();
+    }
+
+    // ========== MÉTODOS DE ARRASTRE ==========
+    private void StartDragging(object element, MouseEventArgs e)
+    {
+        isDragging = true;
+        draggedElement = element;
+        dragStartX = e.ClientX;
+        dragStartY = e.ClientY;
+
+        if (element is StickerElement sticker)
+        {
+            elementStartX = sticker.X;
+            elementStartY = sticker.Y;
+        }
+        else if (element is TextElement text)
+        {
+            elementStartX = text.X;
+            elementStartY = text.Y;
+        }
+    }
+
+    // ========== MÉTODOS DE REDIMENSIONAMIENTO ==========
+    private void StartResizing(object element, MouseEventArgs e)
+    {
+        isResizing = true;
+        resizedElement = element;
+        resizeStartX = e.ClientX;
+        resizeStartY = e.ClientY;
+
+        if (element is StickerElement sticker)
+        {
+            elementStartScale = sticker.ScaleX; 
+        }
+        else if (element is TextElement text)
+        {
+            elementStartScale = text.ScaleX; 
+        }
+    }
+
+    private void StartResizingWidth(object element, MouseEventArgs e)
+    {
+        isResizingWidth = true;
+        resizedElement = element;
+        resizeStartX = e.ClientX;
+
+        if (element is StickerElement sticker)
+        {
+            elementStartScaleX = sticker.ScaleX;
+        }
+        else if (element is TextElement text)
+        {
+            elementStartScaleX = text.ScaleX;
+        }
+    }
+
+    private void StartResizingHeight(object element, MouseEventArgs e)
+    {
+        isResizingHeight = true;
+        resizedElement = element;
+        resizeStartY = e.ClientY;
+
+        if (element is StickerElement sticker)
+        {
+            elementStartScaleY = sticker.ScaleY;
+        }
+        else if (element is TextElement text)
+        {
+            elementStartScaleY = text.ScaleY;
+        }
+    }
+
+    private void StartResizingBoth(object element, MouseEventArgs e)
+    {
+        isResizingBoth = true;
+        resizedElement = element;
+        resizeStartX = e.ClientX;
+        resizeStartY = e.ClientY;
+
+        if (element is StickerElement sticker)
+        {
+            elementStartScaleX = sticker.ScaleX;
+            elementStartScaleY = sticker.ScaleY;
+        }
+        else if (element is TextElement text)
+        {
+            elementStartScaleX = text.ScaleX;
+            elementStartScaleY = text.ScaleY;
+        }
+    }
+
+    private void HandleMouseMove(MouseEventArgs e)
+    {
+        if (isCropDragging && viewModel.EditorState.IsCropping)
+        {
+            var deltaX = e.ClientX - cropStartX;
+            var deltaY = e.ClientY - cropStartY;
+            var cropArea = viewModel.EditorState.CropArea;
+
+            switch (cropArea.DragHandle)
+            {
+                case "move":
+                    cropArea.X = Math.Max(0, cropAreaStartX + deltaX);
+                    cropArea.Y = Math.Max(0, cropAreaStartY + deltaY);
+                    break;
+
+                case "top":
+                    cropArea.Y = Math.Max(0, cropAreaStartY + deltaY);
+                    cropArea.Height = Math.Max(10, cropAreaStartHeight - deltaY);
+                    break;
+
+                case "bottom":
+                    cropArea.Height = Math.Max(10, cropAreaStartHeight + deltaY);
+                    break;
+
+                case "left":
+                    cropArea.X = Math.Max(0, cropAreaStartX + deltaX);
+                    cropArea.Width = Math.Max(10, cropAreaStartWidth - deltaX);
+                    break;
+
+                case "right":
+                    cropArea.Width = Math.Max(10, cropAreaStartWidth + deltaX);
+                    break;
+
+                case "top-left":
+                    cropArea.X = Math.Max(0, cropAreaStartX + deltaX);
+                    cropArea.Y = Math.Max(0, cropAreaStartY + deltaY);
+                    cropArea.Width = Math.Max(10, cropAreaStartWidth - deltaX);
+                    cropArea.Height = Math.Max(10, cropAreaStartHeight - deltaY);
+                    break;
+
+                case "top-right":
+                    cropArea.Y = Math.Max(0, cropAreaStartY + deltaY);
+                    cropArea.Width = Math.Max(10, cropAreaStartWidth + deltaX);
+                    cropArea.Height = Math.Max(10, cropAreaStartHeight - deltaY);
+                    break;
+
+                case "bottom-left":
+                    cropArea.X = Math.Max(0, cropAreaStartX + deltaX);
+                    cropArea.Width = Math.Max(10, cropAreaStartWidth - deltaX);
+                    cropArea.Height = Math.Max(10, cropAreaStartHeight + deltaY);
+                    break;
+
+                case "bottom-right":
+                    cropArea.Width = Math.Max(10, cropAreaStartWidth + deltaX);
+                    cropArea.Height = Math.Max(10, cropAreaStartHeight + deltaY);
+                    break;
+            }
+
+            StateHasChanged();
+        }
+        else if (isResizingWidth && resizedElement != null)
+        {
+            var deltaX = e.ClientX - resizeStartX;
+            var scaleDeltaX = deltaX / 50;
+            var newScaleX = Math.Max(0.1, elementStartScaleX + scaleDeltaX);
+
+            if (resizedElement is StickerElement sticker)
+            {
+                sticker.ScaleX = Math.Min(newScaleX, 5.0);
+            }
+            else if (resizedElement is TextElement text)
+            {
+                text.ScaleX = Math.Min(newScaleX, 5.0);
+            }
+
+            StateHasChanged();
+        }
+        else if (isResizingHeight && resizedElement != null)
+        {
+            var deltaY = e.ClientY - resizeStartY;
+            var scaleDeltaY = deltaY / 50;
+            var newScaleY = Math.Max(0.1, elementStartScaleY + scaleDeltaY);
+
+            if (resizedElement is StickerElement sticker)
+            {
+                sticker.ScaleY = Math.Min(newScaleY, 5.0);
+            }
+            else if (resizedElement is TextElement text)
+            {
+                text.ScaleY = Math.Min(newScaleY, 5.0);
+            }
+
+            StateHasChanged();
+        }
+        else if (isResizingBoth && resizedElement != null)
+        {
+            var deltaX = e.ClientX - resizeStartX;
+            var deltaY = e.ClientY - resizeStartY;
+            var scaleDeltaX = deltaX / 50;
+            var scaleDeltaY = deltaY / 50;
+
+            var newScaleX = Math.Max(0.1, elementStartScaleX + scaleDeltaX);
+            var newScaleY = Math.Max(0.1, elementStartScaleY + scaleDeltaY);
+
+            if (resizedElement is StickerElement sticker)
+            {
+                sticker.ScaleX = Math.Min(newScaleX, 5.0);
+                sticker.ScaleY = Math.Min(newScaleY, 5.0);
+            }
+            else if (resizedElement is TextElement text)
+            {
+                text.ScaleX = Math.Min(newScaleX, 5.0);
+                text.ScaleY = Math.Min(newScaleY, 5.0);
+            }
+
+            StateHasChanged();
+        }
+        else if (isResizing && resizedElement != null)
+        {
+            var deltaX = e.ClientX - resizeStartX;
+            var deltaY = e.ClientY - resizeStartY;
+            var scaleDelta = (Math.Abs(deltaX) + Math.Abs(deltaY)) / 100;
+            var newScale = Math.Max(0.1, elementStartScale + scaleDelta);
+
+            if (resizedElement is StickerElement sticker)
+            {
+                sticker.ScaleX = Math.Min(newScale, 5.0);
+                sticker.ScaleY = Math.Min(newScale, 5.0);
+            }
+            else if (resizedElement is TextElement text)
+            {
+                text.ScaleX = Math.Min(newScale, 5.0);
+                text.ScaleY = Math.Min(newScale, 5.0);
+            }
+
+            StateHasChanged();
+        }
+        else if (isDragging && draggedElement != null)
+        {
+            var deltaX = e.ClientX - dragStartX;
+            var deltaY = e.ClientY - dragStartY;
+
+            if (draggedElement is StickerElement sticker)
+            {
+                sticker.X = elementStartX + deltaX;
+                sticker.Y = elementStartY + deltaY;
+            }
+            else if (draggedElement is TextElement text)
+            {
+                text.X = elementStartX + deltaX;
+                text.Y = elementStartY + deltaY;
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private void HandleMouseUp(MouseEventArgs e)
+    {
+        isDragging = false;
+        draggedElement = null;
+
+        isResizing = false;
+        isResizingWidth = false;
+        isResizingHeight = false;
+        isResizingBoth = false;
+        resizedElement = null;
+
+        isCropDragging = false;
+        if (viewModel.EditorState.IsCropping)
+        {
+            viewModel.EditorState.CropArea.DragHandle = string.Empty;
+        }
+    }
+
+    // ========== MÉTODOS DE RECORTE ==========
+    private void ToggleCropping()
+    {
+        viewModel.EditorState.IsCropping = !viewModel.EditorState.IsCropping;
+
+        if (viewModel.EditorState.IsCropping)
+        {
+            viewModel.EditorState.CropArea = new CropArea
+            {
+                X = 50,
+                Y = 50,
+                Width = 200,
+                Height = 200
+            };
+        }
+
+        StateHasChanged();
+    }
+
+    private void StartCropDragging(string handle, MouseEventArgs e)
+    {
+        if (!viewModel.EditorState.IsCropping) return;
+
+        isCropDragging = true;
+        viewModel.EditorState.CropArea.DragHandle = handle;
+        cropStartX = e.ClientX;
+        cropStartY = e.ClientY;
+
+        cropAreaStartX = viewModel.EditorState.CropArea.X;
+        cropAreaStartY = viewModel.EditorState.CropArea.Y;
+        cropAreaStartWidth = viewModel.EditorState.CropArea.Width;
+        cropAreaStartHeight = viewModel.EditorState.CropArea.Height;
+    }
+
+    private async Task AplicarRecorte()
+    {
+        if (viewModel.CurrentProject != null)
+        {
+            try
+            {
+                var croppedImageUrl = await JSRuntime.InvokeAsync<string>(
+                    "applyCrop",
+                    viewModel.CurrentProject.ImagePath,
+                    viewModel.EditorState.CropArea
+                );
+
+                viewModel.CurrentProject.ImagePath = croppedImageUrl;
+                viewModel.EditorState.IsCropping = false;
+
+                await GuardarProyecto();
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Error al aplicar el recorte: " + ex.Message);
+            }
+        }
+    }
+
+    private void CancelarRecorte()
+    {
+        viewModel.EditorState.IsCropping = false;
+        StateHasChanged();
+    }
+
+    private void ActualizarRecorte()
+    {
+        StateHasChanged();
     }
 }

@@ -11,7 +11,8 @@
 
 <div class="toolbar">
     <button class="btn btn-primary" @onclick="NavigateToCreate">
-        <i class="fas fa-plus"></i> Nuevo Proyecto
+        <i class="bi bi-plus-circle me-2"></i>
+        Nuevo Proyecto
     </button>
 </div>
 
@@ -35,23 +36,22 @@ else
                     <h3>@project.Name</h3>
                     <p>Editado: @project.LastModified.ToString("dd/MM/yyyy")</p>
                 </div>
+
                 <div class="project-actions">
-                    <!-- BOTÓN NUEVO: ABRIR EDITOR -->
-                    <button class="btn btn-sm btn-success" @onclick="() => OpenEditor(project.Id)" 
-                            title="Abrir en editor avanzado">
-                        🎨 Editor
+                    <button class="btn btn-sm btn-success" @onclick="() => OpenEditor(project.Id)"
+                            title="Editar imagen">
+                        <i class="bi bi-palette me-1"></i>
+                        Editor
                     </button>
-                    
-                    <!-- BOTÓN EXISTENTE: EDITAR PROYECTO -->
                     <button class="btn btn-sm btn-outline" @onclick="() => NavigateToEdit(project)"
-                            title="Editar información del proyecto">
-                        ✏️ Editar
+                            title="Modificar datos">
+                        <i class="bi bi-pencil-square me-1"></i>
+                        Modificar
                     </button>
-                    
-                    <!-- BOTÓN EXISTENTE: ELIMINAR -->
                     <button class="btn btn-sm btn-danger" @onclick="() => DeleteProject(project)"
-                            title="Eliminar proyecto">
-                        🗑️ Eliminar
+                            title="Eliminar">
+                        <i class="bi bi-trash me-1"></i>
+                        Eliminar
                     </button>
                 </div>
             </div>
@@ -77,7 +77,6 @@ else
         Navigation.NavigateTo($"/edit-project/{project.Id}");
     }
 
-    // MÉTODO NUEVO: ABRIR EDITOR
     private void OpenEditor(Guid projectId)
     {
         Navigation.NavigateTo($"/editor/{projectId}");

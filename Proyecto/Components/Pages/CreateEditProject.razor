@@ -44,10 +44,14 @@
     }
 
     <div class="form-actions">
-        <button class="btn btn-secondary" @onclick="GoBack">Cancelar</button>
+        <button class="btn btn-secondary" @onclick="GoBack">
+            <i class="bi bi-arrow-left me-1"></i>
+            Cancelar
+        </button>
         <button class="btn btn-primary"
                 @onclick="SaveProject"
                 disabled="@(!IsValid())">
+            <i class="bi @(IsEditMode ? "bi-check-circle" : "bi-plus-circle") me-1"></i>
             @(IsEditMode ? "Actualizar" : "Crear")
         </button>
     </div>

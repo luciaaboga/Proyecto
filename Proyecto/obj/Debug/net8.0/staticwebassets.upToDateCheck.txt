@@ -2,9 +2,11 @@ wwwroot\css\app.css
 wwwroot\css\bootstrap\bootstrap.min.css
 wwwroot\css\bootstrap\bootstrap.min.css.map
 wwwroot\css\components\buttons.css
-wwwroot\css\components\modal.css
+wwwroot\css\components\editor.css
+wwwroot\css\components\forms.css
 wwwroot\css\components\project-grid.css
 wwwroot\favicon.png
 wwwroot\icon-192.png
 wwwroot\index.html
+wwwroot\js\editor.js
 wwwroot\sample-data\weather.json

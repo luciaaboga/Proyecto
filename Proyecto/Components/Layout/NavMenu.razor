@@ -1,6 +1,9 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Proyecto</a>
+        <a class="navbar-brand" href="">
+            <i class="bi bi-camera2 me-2"></i>
+            PhotoCanvas Studio
+        </a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -11,7 +14,14 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                <i class="bi bi-grid-3x3-gap-fill me-2"></i>
+                Mis Proyectos
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="create-project">
+                <i class="bi bi-plus-circle me-2"></i>
+                Nuevo Proyecto
             </NavLink>
         </div>
     </nav>
@@ -19,7 +29,6 @@
 
 @code {
     private bool collapseNavMenu = true;
-
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()

@@ -1,15 +1,15 @@
 {
   "mainAssemblyName": "Proyecto",
   "resources": {
-    "hash": "sha256-PaIeQWz2Fj9D/QCKXwhmFPpNDJ+aSUvyHkhiUfjoiYc=",
+    "hash": "sha256-Kvk7Dm+dIw+Ij0Vef/8MyLXRvR6OgTFaU5yHivG92Bg=",
     "jsModuleNative": {
-      "dotnet.native.js": "sha256-O/NCYcAN9uPocD7ns7AzF/cqx7f5vL1PTJCQs0vEXyk="
+      "dotnet.native.js": "sha256-D0bzod5lwwSzPR43JC8TTCcZKw+3jIHOk8CZFCRj5is="
     },
     "jsModuleRuntime": {
-      "dotnet.runtime.js": "sha256-91CDXCvYTrWqTidtPWAY6j9w/EQtJKjSj9VneQwl020="
+      "dotnet.runtime.js": "sha256-OH8zlJkheyf8H9oAbu0wu1oQm9FKy/BKjDk4Bj/va3s="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-ejEStOt2QNSl51aw0kg/9b8HrrVebvgm5k7AdzN/5VQ="
+      "dotnet.native.wasm": "sha256-1FiXHTP4dewtkVEvJ/s93FNwgKHgjajc/MAN3sofq6Q="
     },
     "icu": {
       "icudt_CJK.dat": "sha256-SZLtQnRc0JkwqHab0VUVP7T3uBPSeYzxzDnpxPpUnHk=",
@@ -209,10 +209,10 @@
       "mscorlib.wasm": "sha256-RLW/7NVuhoPfq151II3kX2kWHgBwQgpCw9aemQNg3to=",
       "netstandard.wasm": "sha256-lAg5WvTiA8wbsIwlr51xh0YWpXT9F5EX3Cnv+11O/mU=",
       "System.Private.CoreLib.wasm": "sha256-3O3muuRQwoLRecYRjfIFWUURvTjP4EmD2O8wYg2UDNY=",
-      "Proyecto.wasm": "sha256-J27Cpf6m1l5kYUWtlOk387fD5aCMZ6xPGAgr4ETZuXU="
+      "Proyecto.wasm": "sha256-qFZe74BPaYyUZuNIk4xeOO7CJRrEiA0CUwE6Qgrbkec="
     },
     "pdb": {
-      "Proyecto.pdb": "sha256-9/lUU8YDOzSmeG2sZX2w79mBAGqWf6u3nGfndfj5lpY="
+      "Proyecto.pdb": "sha256-0Z/dBV0KXlntzbfeugY+EbG8dYL0672ECOk9ESnar1c="
     }
   },
   "cacheBootResources": true,

@@ -1,18 +1,30 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\",
+  "WorkspaceRootPath": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|c:\\users\\jesic\\onedrive\\escritorio\\proyecto\\proyecto\\components\\pages\\createeditproject.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|solutionrelative:proyecto\\components\\pages\\createeditproject.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|c:\\users\\bogad\\onedrive\\documentos\\github\\proyecto\\proyecto\\components\\pages\\editor.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|solutionrelative:proyecto\\components\\pages\\editor.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|c:\\users\\jesic\\onedrive\\escritorio\\proyecto\\proyecto\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|solutionrelative:proyecto\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|c:\\users\\bogad\\onedrive\\documentos\\github\\proyecto\\proyecto\\services\\editorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|solutionrelative:proyecto\\services\\editorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|c:\\users\\jesic\\onedrive\\escritorio\\proyecto\\proyecto\\viewmodels\\homeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|solutionrelative:proyecto\\viewmodels\\homeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|c:\\users\\bogad\\onedrive\\documentos\\github\\proyecto\\proyecto\\models\\editorstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|solutionrelative:proyecto\\models\\editorstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|c:\\users\\bogad\\onedrive\\documentos\\github\\proyecto\\proyecto\\models\\stickerelement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|solutionrelative:proyecto\\models\\stickerelement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|c:\\users\\bogad\\onedrive\\documentos\\github\\proyecto\\proyecto\\viewmodels\\editorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|solutionrelative:proyecto\\viewmodels\\editorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|c:\\users\\bogad\\onedrive\\documentos\\github\\proyecto\\proyecto\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{744FA553-AF8B-4A27-B4E3-9CC59FB79D72}|Proyecto\\Proyecto.csproj|solutionrelative:proyecto\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,44 +34,85 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CreateEditProject.razor",
-              "DocumentMoniker": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\Components\\Pages\\CreateEditProject.razor",
-              "RelativeDocumentMoniker": "Proyecto\\Components\\Pages\\CreateEditProject.razor",
-              "ToolTip": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\Components\\Pages\\CreateEditProject.razor",
-              "RelativeToolTip": "Proyecto\\Components\\Pages\\CreateEditProject.razor",
-              "ViewState": "AgIAADYAAAAAAAAAAAAAAD4AAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-21T14:35:24.827Z",
+              "DocumentIndex": 3,
+              "Title": "StickerElement.cs",
+              "DocumentMoniker": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Models\\StickerElement.cs",
+              "RelativeDocumentMoniker": "Proyecto\\Models\\StickerElement.cs",
+              "ToolTip": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Models\\StickerElement.cs",
+              "RelativeToolTip": "Proyecto\\Models\\StickerElement.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T17:49:39.508Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EditorViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\ViewModels\\EditorViewModel.cs",
+              "RelativeDocumentMoniker": "Proyecto\\ViewModels\\EditorViewModel.cs",
+              "ToolTip": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\ViewModels\\EditorViewModel.cs",
+              "RelativeToolTip": "Proyecto\\ViewModels\\EditorViewModel.cs",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAAHEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T15:44:57.315Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Home.razor",
-              "DocumentMoniker": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\Components\\Pages\\Home.razor",
-              "RelativeDocumentMoniker": "Proyecto\\Components\\Pages\\Home.razor",
-              "ToolTip": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\Components\\Pages\\Home.razor",
-              "RelativeToolTip": "Proyecto\\Components\\Pages\\Home.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-20T01:00:51.599Z"
+              "Title": "EditorService.cs",
+              "DocumentMoniker": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Services\\EditorService.cs",
+              "RelativeDocumentMoniker": "Proyecto\\Services\\EditorService.cs",
+              "ToolTip": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Services\\EditorService.cs",
+              "RelativeToolTip": "Proyecto\\Services\\EditorService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEMAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T15:43:43.936Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "HomeViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\ViewModels\\HomeViewModel.cs",
-              "RelativeDocumentMoniker": "Proyecto\\ViewModels\\HomeViewModel.cs",
-              "ToolTip": "C:\\Users\\jesic\\OneDrive\\Escritorio\\Proyecto\\Proyecto\\ViewModels\\HomeViewModel.cs",
-              "RelativeToolTip": "Proyecto\\ViewModels\\HomeViewModel.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAAACYAAAABAAAAAAAAAA==",
+              "Title": "EditorState.cs",
+              "DocumentMoniker": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Models\\EditorState.cs",
+              "RelativeDocumentMoniker": "Proyecto\\Models\\EditorState.cs",
+              "ToolTip": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Models\\EditorState.cs",
+              "RelativeToolTip": "Proyecto\\Models\\EditorState.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA8AAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-20T00:50:51.948Z"
+              "WhenOpened": "2025-11-01T15:42:53.011Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Editor.razor",
+              "DocumentMoniker": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Components\\Pages\\Editor.razor",
+              "RelativeDocumentMoniker": "Proyecto\\Components\\Pages\\Editor.razor",
+              "ToolTip": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\Components\\Pages\\Editor.razor",
+              "RelativeToolTip": "Proyecto\\Components\\Pages\\Editor.razor",
+              "ViewState": "AgIAALIAAAAAAAAAAAAowMcAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-01T15:33:01.811Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "index.html",
+              "DocumentMoniker": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\wwwroot\\index.html",
+              "RelativeDocumentMoniker": "Proyecto\\wwwroot\\index.html",
+              "ToolTip": "C:\\Users\\bogad\\OneDrive\\Documentos\\GitHub\\Proyecto\\Proyecto\\wwwroot\\index.html",
+              "RelativeToolTip": "Proyecto\\wwwroot\\index.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-11-01T15:17:43.431Z",
+              "EditorCaption": ""
             }
           ]
         }

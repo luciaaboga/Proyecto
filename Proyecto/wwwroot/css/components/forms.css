@@ -1,0 +1,106 @@
+﻿.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(44, 24, 16, 0.1);
+    border: 1px solid var(--cream);
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: var(--brown-dark);
+        font-size: 1rem;
+    }
+
+    .form-group input[type="text"] {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid var(--cream);
+        border-radius: 8px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        background: var(--cream-light);
+    }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: var(--steel-blue);
+            box-shadow: 0 0 0 3px rgba(70, 130, 180, 0.1);
+            background: white;
+        }
+
+.file-input {
+    width: 100%;
+    padding: 2rem;
+    border: 3px dashed var(--cream);
+    border-radius: 12px;
+    background: var(--cream-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    color: var(--brown-light);
+}
+
+    .file-input:hover {
+        border-color: var(--steel-blue);
+        background: rgba(70, 130, 180, 0.05);
+        color: var(--steel-blue);
+    }
+
+.image-preview {
+    margin-top: 1.5rem;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+}
+
+    .image-preview img {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(44, 24, 16, 0.15);
+        border: 3px solid white;
+    }
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--cream);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1, h2 {
+    color: var(--brown-dark);
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--brown-dark) 0%, var(--terracotta) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}

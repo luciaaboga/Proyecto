@@ -1,0 +1,340 @@
+﻿.editor-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.controls-panel {
+    width: 80px;
+    background: white;
+    border-right: 1px solid var(--cream);
+    display: flex;
+    flex-direction: column;
+}
+
+.controls-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    gap: 0.5rem;
+}
+
+.nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.75rem 0.5rem;
+    border: none;
+    background: none;
+    color: var(--brown-light);
+    transition: all 0.3s ease;
+    font-size: 0.75rem;
+    border-left: 3px solid transparent;
+}
+
+    .nav-btn:hover {
+        background: var(--cream-light);
+        color: var(--brown-dark);
+    }
+
+    .nav-btn.active {
+        background: var(--cream-light);
+        color: var(--steel-blue);
+        border-left-color: var(--steel-blue);
+    }
+
+    .nav-btn i {
+        font-size: 1.25rem;
+    }
+
+.content-panel {
+    width: 0;
+    background: white;
+    border-right: 1px solid var(--cream);
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+    .content-panel.expanded {
+        width: 300px;
+    }
+
+.panel-content {
+    width: 300px;
+    padding: 1.5rem;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.image-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f8f9fa;
+    position: relative;
+}
+
+.image-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow: auto;
+}
+
+.editable-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    box-shadow: 0 8px 32px rgba(44, 24, 16, 0.15);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.zoom-controls {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.zoom-level {
+    font-weight: 600;
+    color: var(--brown-dark);
+    min-width: 50px;
+    text-align: center;
+}
+
+.tab-content h4 {
+    color: var(--brown-dark);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    border-bottom: 2px solid var(--cream);
+    padding-bottom: 0.5rem;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.filter-preset {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border: 2px solid var(--cream);
+    border-radius: 8px;
+    background: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+    .filter-preset:hover {
+        border-color: var(--steel-blue);
+        transform: translateY(-2px);
+    }
+
+.filter-preview {
+    width: 60px;
+    height: 40px;
+    border-radius: 4px;
+    border: 2px solid var(--cream);
+}
+
+    .filter-preview.normal {
+        background: linear-gradient(45deg, #f0f0f0, #d0d0d0);
+    }
+
+    .filter-preview.vintage {
+        background: linear-gradient(45deg, #8B7355, #A52A2A);
+    }
+
+    .filter-preview.bw {
+        background: linear-gradient(45deg, #333, #666, #999);
+    }
+
+    .filter-preview.warm {
+        background: linear-gradient(45deg, #FF7F50, #FF4500);
+    }
+
+    .filter-preview.cool {
+        background: linear-gradient(45deg, #4682B4, #87CEEB);
+    }
+    .filter-preview.blue {
+        background: linear-gradient(45deg, #4682B4, #87CEEB, #1E90FF);
+    }
+
+    .filter-preview.red {
+        background: linear-gradient(45deg, #FF4500, #DC143C, #B22222);
+    }
+
+.control-item {
+    margin-bottom: 1.5rem;
+}
+
+    .control-item label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        color: var(--brown-dark);
+        font-weight: 500;
+    }
+
+.control-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--cream);
+    outline: none;
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+}
+
+    .control-group label {
+        display: block;
+        margin-bottom: 0.75rem;
+        color: var(--brown-dark);
+        font-weight: 500;
+    }
+
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.rotation-display {
+    text-align: center;
+    color: var(--brown-light);
+    font-size: 0.9rem;
+}
+
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.1s ease;
+}
+
+.sticker-overlay, .text-overlay {
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    z-index: 10;
+}
+
+    .sticker-overlay:hover, .text-overlay:hover {
+        outline: 2px dashed var(--steel-blue);
+    }
+
+.sticker-emoji {
+    font-size: 2rem;
+    display: block;
+}
+
+.sticker-img {
+    max-width: 100px;
+    max-height: 100px;
+    display: block;
+}
+
+.text-overlay {
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.text-size-slider {
+    width: 100%;
+}
+
+.color-picker {
+    width: 40px;
+    height: 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.text-options {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.sticker-actions, .text-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--cream);
+}
+
+.resize-handle {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background: var(--steel-blue);
+    border: 1px solid white;
+    border-radius: 50%;
+    cursor: nw-resize;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.delete-handle {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 16px;
+    height: 16px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.sticker-overlay:hover .resize-handle,
+.sticker-overlay:hover .delete-handle,
+.text-overlay:hover .resize-handle,
+.text-overlay:hover .delete-handle {
+    opacity: 1;
+}
+
+.delete-handle:hover {
+    background: #c82333;
+    transform: scale(1.1);
+}
+
+.sticker-overlay, .text-overlay {
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    z-index: 10;
+}
+
+    .sticker-overlay:hover, .text-overlay:hover {
+        outline: 2px dashed var(--steel-blue);
+    }

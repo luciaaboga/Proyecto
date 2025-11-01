@@ -1,57 +1,83 @@
-// Funciones JavaScript para el editor
-function downloadImage(imageUrl, filename) {
-    // Crear un enlace temporal para descargar la imagen
-    const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
+window.downloadEditedImage = async (imageUrl, stickers, textElements, filters, transformations, fileName) => {
+    return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
-// Mostrar notificación
-function showNotification(message, type = 'info') {
-    // Crear elemento de notificación
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type} notification`;
-    notification.innerHTML = `
-        <span>${message}</span>
-        <button onclick="this.parentElement.remove()">&times;</button>
-    `;
-    
-    // Estilos para la notificación
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 10000;
-        min-width: 300px;
-        animation: slideIn 0.3s ease-out;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Auto-remover después de 3 segundos
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
-        }
-    }, 3000);
-}
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
 
-// Inyectar estilos para notificaciones
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    .notification {
-        backdrop-filter: blur(10px);
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    }
-`;
-document.head.appendChild(style);
+            ctx.save();
+
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(transformations.rotation * Math.PI / 180);
+
+            if (transformations.flipHorizontal) {
+                ctx.scale(-1, 1);
+            }
+            if (transformations.flipVertical) {
+                ctx.scale(1, -1);
+            }
+
+            ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+            ctx.filter = `brightness(${filters.brightness}%) contrast(${filters.contrast}%) saturate(${filters.saturation}%)`;
+
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            ctx.filter = 'none';
+
+            ctx.restore();
+
+            stickers.forEach(sticker => {
+                ctx.save();
+                ctx.translate(sticker.x, sticker.y);
+                ctx.scale(sticker.scale, sticker.scale);
+                ctx.rotate(sticker.rotation * Math.PI / 180);
+
+                if (sticker.content.startsWith('http')) {
+                    const stickerImg = new Image();
+                    stickerImg.src = sticker.content;
+                    ctx.drawImage(stickerImg, -25, -25, 50, 50); 
+                } else {
+                    ctx.font = '48px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(sticker.content, 0, 0);
+                }
+
+                ctx.restore();
+            });
+
+            textElements.forEach(textElement => {
+                ctx.save();
+
+                ctx.translate(textElement.x, textElement.y);
+                ctx.scale(textElement.scale, textElement.scale);
+                ctx.rotate(textElement.rotation * Math.PI / 180);
+
+                ctx.fillStyle = textElement.color;
+                ctx.font = `${textElement.isBold ? 'bold' : 'normal'} ${textElement.isItalic ? 'italic' : 'normal'} ${textElement.fontSize}px ${textElement.fontFamily}`;
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+                ctx.fillText(textElement.text, 0, 0);
+
+                ctx.restore();
+            });
+
+            const dataUrl = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            resolve(dataUrl);
+        };
+
+        img.src = imageUrl;
+    });
+};
