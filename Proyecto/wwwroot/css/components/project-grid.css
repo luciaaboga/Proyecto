@@ -1,17 +1,37 @@
-﻿.projects-grid {
+﻿/* ===== VARIABLES ===== */
+:root {
+    --primary: #4361ee;
+    --primary-dark: #3a56d4;
+    --primary-light: #4895ef;
+    --secondary: #7209b7;
+    --secondary-dark: #5a08a5;
+    --success: #4cc9f0;
+    --warning: #f72585;
+    --danger: #e63946;
+    --dark: #2b2d42;
+    --light: #f8f9fa;
+    --gray: #6c757d;
+    --border: #e9ecef;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== GRID DE PROYECTOS ===== */
+.projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 2rem;
-    padding: 1rem 0;
+    padding: 1.5rem 0;
 }
 
 .project-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(44, 24, 16, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid var(--cream);
+    border: 1px solid var(--border);
     position: relative;
 }
 
@@ -22,14 +42,14 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, var(--terracotta), var(--steel-blue));
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
         opacity: 0;
         transition: opacity 0.3s ease;
     }
 
     .project-card:hover {
         transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 12px 40px rgba(44, 24, 16, 0.15);
+        box-shadow: var(--shadow-lg);
     }
 
         .project-card:hover::before {
@@ -38,9 +58,9 @@
 
 .project-thumbnail {
     width: 100%;
-    height: 200px;
+    height: 220px;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--cream) 0%, var(--brown-light) 100%);
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
     position: relative;
 }
 
@@ -52,7 +72,7 @@
     }
 
 .project-card:hover .project-thumbnail img {
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
 
 .project-thumbnail::after {
@@ -62,7 +82,7 @@
     left: 0;
     right: 0;
     height: 40%;
-    background: linear-gradient(transparent, rgba(44, 24, 16, 0.7));
+    background: linear-gradient(transparent, rgba(43, 45, 66, 0.8));
 }
 
 .project-info {
@@ -72,15 +92,16 @@
 
     .project-info h3 {
         margin: 0 0 0.5rem 0;
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: var(--brown-dark);
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark);
     }
 
     .project-info p {
         margin: 0;
-        font-size: 0.9rem;
-        color: var(--brown-light);
+        font-size: 0.95rem;
+        color: var(--gray);
+        line-height: 1.5;
     }
 
 .project-actions {
@@ -89,25 +110,94 @@
     gap: 0.75rem;
 }
 
+/* ===== BOTONES DE PROYECTO ===== */
+.btn-project {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-edit {
+    background: var(--primary);
+    color: white;
+}
+
+    .btn-edit:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+
+.btn-delete {
+    background: var(--danger);
+    color: white;
+}
+
+    .btn-delete:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+    }
+
+/* ===== ESTADO VACÍO ===== */
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
-    color: var(--brown-light);
+    color: var(--gray);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 2px dashed var(--border);
+    margin: 2rem 0;
 }
 
 .empty-state-icon {
     font-size: 4rem;
-    color: var(--cream);
-    margin-bottom: 1rem;
+    color: var(--primary-light);
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
 }
 
 .empty-state h3 {
-    color: var(--brown-dark);
+    color: var(--dark);
     margin-bottom: 1rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.5rem;
 }
 
 .empty-state p {
     margin-bottom: 2rem;
     font-size: 1.1rem;
+    color: var(--gray);
 }
+
+/* ===== BOTÓN CREAR PROYECTO ===== */
+.btn-create {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    box-shadow: var(--shadow);
+}
+
+    .btn-create:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+    }

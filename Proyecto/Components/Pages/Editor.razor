@@ -9,34 +9,32 @@
 @inject IJSRuntime JSRuntime
 
 <div class="editor-layout">
-    <header class="editor-header">
+    <div class="editor-header">
         <div class="header-left">
-            <button class="btn btn-outline" @onclick="VolverAProyectos" title="Volver a proyectos">
-                <i class="bi bi-arrow-left"></i>
-                Volver
+            <button class="btn btn-outline" @onclick="VolverAProyectos">
+                <i class="bi bi-arrow-left"></i> Volver
             </button>
-            <h2 class="project-title">@(viewModel.CurrentProject?.Name ?? "Editor")</h2>
         </div>
 
-        <div class="header-actions">
-            <button class="btn btn-secondary" @onclick="ResetearFiltros" title="Resetear todo">
-                <i class="bi bi-arrow-clockwise"></i>
-                Resetear
+        <div class="header-center">
+            <h1 class="project-title">@(viewModel.CurrentProject?.Name ?? "Editor")</h1>
+        </div>
+
+        <div class="header-right">
+            <button class="btn btn-warning btn-sm" @onclick="ResetearFiltros">
+                <i class="bi bi-arrow-clockwise"></i> Resetear
             </button>
-            <button class="btn btn-primary" @onclick="GuardarProyecto" title="Guardar cambios">
-                <i class="bi bi-check-circle"></i>
-                Guardar
+            <button class="btn btn-success btn-sm" @onclick="GuardarProyecto">
+                <i class="bi bi-floppy"></i> Guardar
             </button>
-            <button class="btn btn-info" @onclick="ConvertirAStickerWhatsApp" title="Convertir a Sticker de WhatsApp">
-                <i class="bi bi-whatsapp"></i>
-                Sticker WhatsApp
+            <button class="btn btn-whatsapp btn-sm" @onclick="ConvertirAStickerWhatsApp">
+                <i class="bi bi-whatsapp"></i> Sticker
             </button>
-            <button class="btn btn-success" @onclick="DescargarImagen" title="Descargar imagen editada">
-                <i class="bi bi-download"></i>
-                Descargar
+            <button class="btn btn-primary btn-sm" @onclick="DescargarImagen">
+                <i class="bi bi-download"></i> Descargar
             </button>
         </div>
-    </header>
+    </div>
 
     <div class="editor-content">
         <aside class="controls-panel">
