@@ -7,64 +7,155 @@
 
 <PageTitle>Editor de Fotos - Mis Proyectos</PageTitle>
 
-<h1>Mis Proyectos</h1>
-
-<div class="toolbar">
-    <button class="btn btn-primary" @onclick="NavigateToCreate">
-        <i class="bi bi-plus-circle me-2"></i>
-        Nuevo Proyecto
-    </button>
-</div>
-
-@if (viewModel?.Projects?.Count == 0)
-{
-    <div class="empty-state">
-        <p>No tienes proyectos creados</p>
-        <p>Crea tu primer proyecto para empezar a editar fotos</p>
+<div class="home-container">
+    <div class="home-header">
+        <h1 class="home-title">Mis Proyectos</h1>
     </div>
-}
-else
-{
-    <div class="projects-grid">
-        @foreach (var project in viewModel?.Projects ?? new List<Project>())
-        {
-            <div class="project-card">
-                <div class="project-thumbnail">
-                    <img src="@project.Thumbnail" alt="@project.Name" />
-                </div>
-                <div class="project-info">
-                    <h3>@project.Name</h3>
-                    <p>Editado: @project.LastModified.ToString("dd/MM/yyyy")</p>
-                </div>
 
-                <div class="project-actions">
-                    <button class="btn btn-sm btn-success" @onclick="() => OpenEditor(project.Id)"
-                            title="Editar imagen">
-                        <i class="bi bi-palette me-1"></i>
-                        Editor
-                    </button>
-                    <button class="btn btn-sm btn-outline" @onclick="() => NavigateToEdit(project)"
-                            title="Modificar datos">
-                        <i class="bi bi-pencil-square me-1"></i>
-                        Modificar
-                    </button>
-                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteProject(project)"
-                            title="Eliminar">
-                        <i class="bi bi-trash me-1"></i>
-                        Eliminar
-                    </button>
+    <div class="toolbar-canva">
+        <div class="search-container">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Buscar proyectos..." @bind="searchTerm" @oninput="OnSearch" />
+            </div>
+        </div>
+
+        <div class="toolbar-actions-canva">
+            <button class="btn btn-primary btn-icon" @onclick="NavigateToCreate" title="Nuevo proyecto">
+                <i class="bi bi-plus-lg"></i>
+            </button>
+
+            <div class="dropdown">
+                <button class="btn btn-outline btn-icon" title="Ordenar proyectos">
+                    <i class="bi bi-filter"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a @onclick='() => SortProjects("name-asc")'>Nombre A-Z</a>
+                    <a @onclick='() => SortProjects("name-desc")'>Nombre Z-A</a>
+                    <a @onclick='() => SortProjects(" date-desc")'>Más recientes</a>
+                    <a @onclick='() => SortProjects(" date-asc")'>Más antiguos</a>
+                    <a @onclick='() => SortProjects("favorites")'>Solo favoritos</a>
                 </div>
             </div>
-        }
+        </div>
     </div>
-}
+
+    @if (filteredProjects?.Count == 0)
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bi bi-folder"></i>
+            </div>
+            <h3>No hay proyectos</h3>
+            <p>@(string.IsNullOrEmpty(searchTerm) ? "Crea tu primer proyecto para empezar" : "No se encontraron proyectos con ese nombre")</p>
+            <button class="btn btn-primary" @onclick="NavigateToCreate">
+                <i class="bi bi-plus-circle me-2"></i>
+                Crear Proyecto
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="projects-grid-canva">
+            @foreach (var project in filteredProjects ?? new List<Project>())
+            {
+                <div class="project-card-canva" @onmouseenter="() => ShowFavoriteButton(project)" @onmouseleave="() => HideFavoriteButton(project)">
+                    <div class="favorite-button @(project.IsFavorite ? "favorited" : "") @(project.ShowFavorite ? "show" : "hide")"
+                         @onclick="() => ToggleFavorite(project)">
+                        <i class="bi @(project.IsFavorite ? "bi-heart-fill" : "bi-heart")"></i>
+                    </div>
+
+                    <div class="project-thumbnail-canva" @onclick="() => OpenEditor(project.Id)">
+                        <img src="@project.Thumbnail" alt="@project.Name" />
+                        <div class="project-overlay">
+                            <button class="btn-edit-overlay" @onclick="() => OpenEditor(project.Id)">
+                                <i class="bi bi-palette"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="project-info-canva">
+                        <div class="project-header">
+                            <h3 class="project-title">@project.Name</h3>
+                        </div>
+                        <div class="project-footer">
+                            <span class="project-date">Editado: @project.LastModified.ToString("dd/MM/yyyy")</span>
+                            <div class="project-actions-mini">
+                                <button class="btn-icon-sm" @onclick="() => NavigateToEdit(project)" title="Modificar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button class="btn-icon-sm btn-danger" @onclick="() => DeleteProject(project)" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
 
 @code {
     private HomeViewModel? viewModel;
+    private string searchTerm = string.Empty;
+    private List<Project> filteredProjects = new();
+    private string currentSort = "date-desc";
 
     protected override void OnInitialized()
     {
         viewModel = new HomeViewModel(ProjectService);
+        UpdateFilteredProjects();
+    }
+
+    private void UpdateFilteredProjects()
+    {
+        var projects = viewModel?.Projects ?? new List<Project>();
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            projects = projects.Where(p => p.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        filteredProjects = currentSort switch
+        {
+            "name-asc" => projects.OrderBy(p => p.Name).ToList(),
+            "name-desc" => projects.OrderByDescending(p => p.Name).ToList(),
+            "date-desc" => projects.OrderByDescending(p => p.LastModified).ToList(),
+            "date-asc" => projects.OrderBy(p => p.LastModified).ToList(),
+            "favorites" => projects.Where(p => p.IsFavorite).ToList(),
+            _ => projects.OrderByDescending(p => p.LastModified).ToList()
+        };
+    }
+
+    private void OnSearch(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString() ?? string.Empty;
+        UpdateFilteredProjects();
+    }
+
+    private void SortProjects(string sortType)
+    {
+        currentSort = sortType;
+        UpdateFilteredProjects();
+    }
+
+    private void ShowFavoriteButton(Project project)
+    {
+        project.ShowFavorite = true;
+        StateHasChanged();
+    }
+
+    private void HideFavoriteButton(Project project)
+    {
+        project.ShowFavorite = false;
+        StateHasChanged();
+    }
+
+    private void ToggleFavorite(Project project)
+    {
+        project.IsFavorite = !project.IsFavorite;
+        StateHasChanged();
     }
 
     private void NavigateToCreate()
@@ -85,6 +176,7 @@ else
     private void DeleteProject(Project project)
     {
         viewModel?.DeleteProject(project);
+        UpdateFilteredProjects();
         StateHasChanged();
     }
 }

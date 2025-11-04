@@ -32,7 +32,6 @@ namespace Proyecto.ViewModels
                 EditorState.FlipVertical = CurrentProject.FlipVertical;
             }
         }
-
         public async Task ApplyFiltersAsync()
         {
             if (CurrentProject != null)
@@ -80,34 +79,34 @@ namespace Proyecto.ViewModels
                     EditorState.Saturation = 100;
                     break;
                 case "vintage":
-                    EditorState.Brightness = 110;
-                    EditorState.Contrast = 90;
-                    EditorState.Saturation = 85;
+                    EditorState.Brightness = 120;
+                    EditorState.Contrast = 110;
+                    EditorState.Saturation = 60;
                     break;
                 case "bw":
-                    EditorState.Brightness = 100;
-                    EditorState.Contrast = 120;
+                    EditorState.Brightness = 90;
+                    EditorState.Contrast = 150;
                     EditorState.Saturation = 0;
                     break;
                 case "warm":
-                    EditorState.Brightness = 105;
-                    EditorState.Contrast = 95;
-                    EditorState.Saturation = 120;
+                    EditorState.Brightness = 120;
+                    EditorState.Contrast = 110;
+                    EditorState.Saturation = 150;
                     break;
                 case "cool":
-                    EditorState.Brightness = 95;
-                    EditorState.Contrast = 110;
-                    EditorState.Saturation = 80;
+                    EditorState.Brightness = 90;
+                    EditorState.Contrast = 120;
+                    EditorState.Saturation = 130;
                     break;
                 case "blue":
-                    EditorState.Brightness = 95;
-                    EditorState.Contrast = 105;
-                    EditorState.Saturation = 110;
+                    EditorState.Brightness = 90;
+                    EditorState.Contrast = 120;
+                    EditorState.Saturation = 180;
                     break;
                 case "red":
-                    EditorState.Brightness = 105;
-                    EditorState.Contrast = 100;
-                    EditorState.Saturation = 130;
+                    EditorState.Brightness = 110;
+                    EditorState.Contrast = 120;
+                    EditorState.Saturation = 200;
                     break;
             }
             EditorState.AppliedFilter = filterName;

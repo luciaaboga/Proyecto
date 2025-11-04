@@ -29,7 +29,7 @@ namespace Proyecto.Contracts
         Task<Project?> GetProjectAsync(Guid projectId);
         Task UpdateProjectAsync(Project project);
         
-        // Nuevos métodos para filtros
+        // Métodos para filtros
         Task ApplyFiltersAsync(Guid projectId, int brightness, int contrast, int saturation, int rotation, bool flipH, bool flipV);
         Task ResetFiltersAsync(Guid projectId);
     }

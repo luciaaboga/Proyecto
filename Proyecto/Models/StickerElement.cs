@@ -10,5 +10,6 @@
         public double ScaleY { get; set; } = 1.0;
         public double Rotation { get; set; } = 0;
         public bool IsDragging { get; set; } = false;
+        public bool IsCustom { get; set; } = false;
     }
 }

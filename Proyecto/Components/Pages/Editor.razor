@@ -3,6 +3,7 @@
 @using Proyecto.Contracts
 @using Proyecto.ViewModels
 @using Proyecto.Services
+@using Microsoft.AspNetCore.Components.Forms
 @inject NavigationManager Navigation
 @inject IEditorService EditorService
 @inject IProjectService ProjectService
@@ -272,23 +273,26 @@
                             </div>
 
                             <div class="control-group">
-                                <label>Rotación</label>
-                                <div class="button-group">
-                                    <button class="btn btn-sm btn-outline" @onclick="RotarIzquierda">
+                                <label>
+                                    <i class="bi bi-arrow-repeat"></i>
+                                    Rotación
+                                </label>
+                                <div class="rotation-buttons">
+                                    <button class="btn btn-sm btn-outline" @onclick="RotarIzquierda" title="Rotar 90° izquierda">
                                         <i class="bi bi-arrow-counterclockwise"></i>
                                         90°
                                     </button>
-                                    <button class="btn btn-sm btn-outline" @onclick="RotarDerecha">
+                                    <button class="btn btn-sm btn-outline" @onclick="RotarDerecha" title="Rotar 90° derecha">
                                         <i class="bi bi-arrow-clockwise"></i>
                                         90°
                                     </button>
-                                    <button class="btn btn-sm btn-outline" @onclick="Rotar180">
+                                    <button class="btn btn-sm btn-outline" @onclick="Rotar180" title="Rotar 180°">
                                         <i class="bi bi-arrow-repeat"></i>
                                         180°
                                     </button>
                                 </div>
                                 <div class="rotation-display">
-                                    Ángulo: @viewModel.EditorState.Rotation°
+                                    Ángulo actual: @viewModel.EditorState.Rotation°
                                 </div>
                             </div>
 
@@ -315,23 +319,59 @@
                 {
                     <div class="tab-content">
                         <h4>Stickers</h4>
-                        <div class="stickers-grid scrollable-content">
-                            <div class="sticker-category">
-                                <h5>Emojis</h5>
-                                <div class="stickers-list">
-                                    <button class="sticker-item" @onclick='() => AgregarSticker(" 😊")'>😊</button>
-                                    <button class="sticker-item" @onclick='() => AgregarSticker(" ❤️")'>❤️</button>
-                                    <button class="sticker-item" @onclick='() => AgregarSticker(" ⭐")'>⭐</button>
-                                    <button class="sticker-item" @onclick='() => AgregarSticker(" 🎉")'>🎉</button>
-                                    <button class="sticker-item" @onclick='() => AgregarSticker(" 🔥")'>🔥</button>
-                                    <button class="sticker-item" @onclick='() => AgregarSticker(" 🌟")'>🌟</button>
+                        <div class="stickers-container">
+                            <div class="stickers-content scrollable-content">
+                                <div class="upload-sticker-section">
+                                    <label class="upload-sticker-btn">
+                                        <i class="bi bi-cloud-upload"></i>
+                                        Subir Sticker
+                                        <InputFile OnChange="HandleStickerUpload"
+                                                   accept="image/*"
+                                                   style="display: none;" />
+                                    </label>
+                                    <p class="upload-hint">Formatos: JPG, PNG, GIF, WebP</p>
+                                </div>
+
+                                @if (uploadedStickers.Any())
+                                {
+                                    <div class="sticker-category">
+                                        <h5>Mis Stickers</h5>
+                                        <div class="stickers-list">
+                                            @foreach (var stickerUrl in uploadedStickers)
+                                            {
+                                                <button class="sticker-item custom-sticker" @onclick='() => AgregarStickerPersonalizado(stickerUrl)'>
+                                                    <img src="@stickerUrl" alt="Sticker personalizado" />
+                                                </button>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="sticker-category">
+                                    <h5>Emojis</h5>
+                                    <div class="stickers-list">
+                                        <button class="sticker-item" @onclick='() => AgregarSticker("😊")'>😊</button>
+                                        <button class="sticker-item" @onclick='() => AgregarSticker("❤️")'>❤️</button>
+                                        <button class="sticker-item" @onclick='() => AgregarSticker("⭐")'>⭐</button>
+                                        <button class="sticker-item" @onclick='() => AgregarSticker("🎉")'>🎉</button>
+                                        <button class="sticker-item" @onclick='() => AgregarSticker("🔥")'>🔥</button>
+                                        <button class="sticker-item" @onclick='() => AgregarSticker("🌟")'>🌟</button>
+                                        <button class="sticker-item" @onclick='() => AgregarSticker("👍")'>👍</button>
+                                        <button class="sticker-item" @onclick='() => AgregarSticker("🎨")'>🎨</button>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="sticker-actions">
                                 <button class="btn btn-sm btn-outline" @onclick="EliminarTodosStickers">
-                                    <i class="bi bi-trash"></i> Eliminar Todos
+                                    <i class="bi bi-trash"></i> Eliminar Todos los Stickers
                                 </button>
+                                @if (uploadedStickers.Any())
+                                {
+                                    <button class="btn btn-sm btn-danger" @onclick="LimpiarStickersSubidos" style="margin-top: 0.5rem;">
+                                        <i class="bi bi-x-circle"></i> Limpiar Stickers Subidos
+                                    </button>
+                                }
                             </div>
                         </div>
                     </div>
@@ -421,7 +461,7 @@
                                  style="left: @(sticker.X)px; top: @(sticker.Y)px; transform: scale(@sticker.ScaleX, @sticker.ScaleY) rotate(@(sticker.Rotation)deg);"
                                  @onmousedown="@((e) => StartDragging(sticker, e))">
 
-                                @if (sticker.Content.StartsWith("http"))
+                                @if (sticker.Content.StartsWith("data:image") || sticker.Content.StartsWith("http"))
                                 {
                                     <img src="@sticker.Content" class="sticker-img" />
                                 }
@@ -533,6 +573,11 @@
     private double cropStartX, cropStartY;
     private double cropAreaStartX, cropAreaStartY, cropAreaStartWidth, cropAreaStartHeight;
 
+    // Variables para stickers personalizados
+    private List<string> uploadedStickers = new List<string>();
+    private const int MAX_STICKER_SIZE = 5 * 1024 * 1024; // 5MB máximo
+    private readonly string[] allowedImageTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
+
     // ========== MÉTODOS DE INICIALIZACIÓN ==========
     protected override async Task OnInitializedAsync()
     {
@@ -591,8 +636,18 @@
 
     private async Task GuardarProyecto()
     {
-        await AplicarFiltros();
-        await JSRuntime.InvokeVoidAsync("alert", "¡Proyecto guardado correctamente!");
+        try
+        {
+            await viewModel.ApplyFiltersAsync();
+
+            await JSRuntime.InvokeVoidAsync("alert", "¡Proyecto guardado correctamente!");
+
+            await CargarProyecto();
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"Error al guardar: {ex.Message}");
+        }
     }
 
     private async Task DescargarImagen()
@@ -724,6 +779,79 @@
     private void EliminarTodosStickers()
     {
         viewModel.EditorState.Stickers.Clear();
+        StateHasChanged();
+    }
+
+    // Método para manejar la subida de stickers
+    private async Task HandleStickerUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (!allowedImageTypes.Contains(file.ContentType))
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Formato no válido. Usa JPG, PNG o GIF.");
+            return;
+        }
+
+        if (file.Size > MAX_STICKER_SIZE)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "La imagen es muy grande. Máximo 5MB.");
+            return;
+        }
+
+        try
+        {
+            using var stream = file.OpenReadStream(MAX_STICKER_SIZE);
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            var buffer = memoryStream.ToArray();
+
+            var base64String = Convert.ToBase64String(buffer);
+            var imageUrl = $"data:{file.ContentType};base64,{base64String}";
+
+            uploadedStickers.Add(imageUrl);
+            StateHasChanged();
+
+            await JSRuntime.InvokeVoidAsync("alert", "Sticker agregado correctamente!");
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"Error al subir el sticker: {ex.Message}");
+        }
+    }
+
+    private void AgregarStickerPersonalizado(string imageUrl)
+    {
+        var nuevoSticker = new StickerElement
+        {
+            Content = imageUrl,
+            X = 100,
+            Y = 100,
+            ScaleX = 1.0,
+            ScaleY = 1.0,
+            Rotation = 0,
+            IsCustom = true 
+        };
+
+        viewModel.EditorState.Stickers.Add(nuevoSticker);
+        StateHasChanged();
+    }
+
+    // Método para limpiar stickers subidos
+    private void LimpiarStickersSubidos()
+    {
+        uploadedStickers.Clear();
+
+        // También eliminar los stickers personalizados de la imagen
+        var customStickers = viewModel.EditorState.Stickers
+            .Where(s => s.IsCustom)
+            .ToList();
+
+        foreach (var sticker in customStickers)
+        {
+            viewModel.EditorState.Stickers.Remove(sticker);
+        }
+
         StateHasChanged();
     }
 

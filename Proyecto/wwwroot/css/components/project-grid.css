@@ -1,22 +1,4 @@
-﻿/* ===== VARIABLES ===== */
-:root {
-    --primary: #4361ee;
-    --primary-dark: #3a56d4;
-    --primary-light: #4895ef;
-    --secondary: #7209b7;
-    --secondary-dark: #5a08a5;
-    --success: #4cc9f0;
-    --warning: #f72585;
-    --danger: #e63946;
-    --dark: #2b2d42;
-    --light: #f8f9fa;
-    --gray: #6c757d;
-    --border: #e9ecef;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-/* ===== GRID DE PROYECTOS ===== */
+﻿/* ===== GRID DE PROYECTOS ===== */
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

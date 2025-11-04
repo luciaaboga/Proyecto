@@ -30,8 +30,17 @@ namespace Proyecto.Services
                 project.FlipHorizontal = editorState.FlipHorizontal;
                 project.FlipVertical = editorState.FlipVertical;
 
-                project.StickersJson = JsonSerializer.Serialize(editorState.Stickers);
-                project.TextElementsJson = JsonSerializer.Serialize(editorState.TextElements);
+                project.Perspective = editorState.Perspective;
+                project.PerspectiveVertical = editorState.PerspectiveVertical;
+
+                var serializerOptions = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = false
+                };
+
+                project.StickersJson = JsonSerializer.Serialize(editorState.Stickers, serializerOptions);
+                project.TextElementsJson = JsonSerializer.Serialize(editorState.TextElements, serializerOptions);
 
                 project.LastModified = DateTime.Now;
                 _projectService.UpdateProject(project);
@@ -43,25 +52,44 @@ namespace Proyecto.Services
             var project = _projectService.GetProjectById(projectId);
             if (project != null)
             {
-                var editorState = await GetEditorStateAsync(projectId);
-                if (editorState != null)
-                {
-                    project.Brightness = editorState.Brightness;
-                    project.Contrast = editorState.Contrast;
-                    project.Saturation = editorState.Saturation;
-                    project.Rotation = editorState.Rotation;
-                    project.FlipHorizontal = editorState.FlipHorizontal;
-                    project.FlipVertical = editorState.FlipVertical;
+                var editorState = await GetEditorStateAsync(projectId) ?? new EditorState();
 
+                editorState.Brightness = project.Brightness;
+                editorState.Contrast = project.Contrast;
+                editorState.Saturation = project.Saturation;
+                editorState.Rotation = project.Rotation;
+                editorState.FlipHorizontal = project.FlipHorizontal;
+                editorState.FlipVertical = project.FlipVertical;
+
+                editorState.Perspective = project.Perspective;
+                editorState.PerspectiveVertical = project.PerspectiveVertical;
+
+                var serializerOptions = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+
+                try
+                {
                     if (!string.IsNullOrEmpty(project.StickersJson))
                     {
-                        editorState.Stickers = JsonSerializer.Deserialize<List<StickerElement>>(project.StickersJson) ?? new List<StickerElement>();
+                        editorState.Stickers = JsonSerializer.Deserialize<List<StickerElement>>(
+                            project.StickersJson, serializerOptions) ?? new List<StickerElement>();
                     }
+
                     if (!string.IsNullOrEmpty(project.TextElementsJson))
                     {
-                        editorState.TextElements = JsonSerializer.Deserialize<List<TextElement>>(project.TextElementsJson) ?? new List<TextElement>();
+                        editorState.TextElements = JsonSerializer.Deserialize<List<TextElement>>(
+                            project.TextElementsJson, serializerOptions) ?? new List<TextElement>();
                     }
                 }
+                catch (JsonException)
+                {
+                    editorState.Stickers = new List<StickerElement>();
+                    editorState.TextElements = new List<TextElement>();
+                }
+
+                await SaveEditorStateAsync(projectId, editorState);
             }
             return project;
         }

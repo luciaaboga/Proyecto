@@ -19,5 +19,9 @@ namespace Proyecto.Models
         public string OriginalImagePath { get; set; } = string.Empty;
         public string StickersJson { get; set; } = string.Empty;
         public string TextElementsJson { get; set; } = string.Empty;
+        public bool IsFavorite { get; set; }
+        public bool ShowFavorite { get; set; }
+        public int Perspective { get; set; } = 0;
+        public int PerspectiveVertical { get; set; } = 0;
     }
 }
