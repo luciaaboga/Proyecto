@@ -338,3 +338,405 @@
     .sticker-overlay:hover, .text-overlay:hover {
         outline: 2px dashed var(--steel-blue);
     }
+
+.perspective-controls {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--cream-light);
+    border-radius: 8px;
+    border: 1px solid var(--cream);
+}
+
+.perspective-slider {
+    margin-bottom: 1rem;
+}
+
+    .perspective-slider label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        color: var(--brown-dark);
+        font-weight: 500;
+    }
+
+    .perspective-slider .value {
+        color: var(--steel-blue);
+        font-weight: 600;
+        min-width: 50px;
+        text-align: right;
+    }
+
+.perspective-slider-control {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--terracotta), var(--steel-blue));
+    outline: none;
+    -webkit-appearance: none;
+}
+
+    .perspective-slider-control::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--steel-blue);
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .perspective-slider-control::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--steel-blue);
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--brown-light);
+}
+
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.2s ease;
+    transform-style: preserve-3d;
+}
+
+.editable-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    box-shadow: 0 8px 32px rgba(44, 24, 16, 0.15);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.perspective-controls {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--cream-light);
+    border-radius: 8px;
+    border: 1px solid var(--cream);
+    transform-style: preserve-3d;
+}
+
+.perspective-slider-control {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--terracotta), #ccc, var(--steel-blue));
+    outline: none;
+    -webkit-appearance: none;
+    transition: all 0.3s ease;
+}
+
+    .perspective-slider-control:active {
+        transform: scale(1.02);
+    }
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.editable-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    box-shadow: 0 8px 32px rgba(44, 24, 16, 0.15);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    transform-origin: center center;
+}
+.crop-handle {
+    position: absolute;
+    background: #fff;
+    border: 2px solid #007bff;
+    border-radius: 2px;
+    z-index: 1000;
+}
+
+    .crop-handle.top {
+        top: -6px;
+        left: 20px;
+        right: 20px;
+        height: 8px;
+        cursor: n-resize;
+    }
+
+    .crop-handle.bottom {
+        bottom: -6px;
+        left: 20px;
+        right: 20px;
+        height: 8px;
+        cursor: s-resize;
+    }
+
+    .crop-handle.left {
+        left: -6px;
+        top: 20px;
+        bottom: 20px;
+        width: 8px;
+        cursor: w-resize;
+    }
+
+    .crop-handle.right {
+        right: -6px;
+        top: 20px;
+        bottom: 20px;
+        width: 8px;
+        cursor: e-resize;
+    }
+
+    .crop-handle.top-left {
+        top: -8px;
+        left: -8px;
+        width: 16px;
+        height: 16px;
+        cursor: nw-resize;
+        border-radius: 50%;
+    }
+
+    .crop-handle.top-right {
+        top: -8px;
+        right: -8px;
+        width: 16px;
+        height: 16px;
+        cursor: ne-resize;
+        border-radius: 50%;
+    }
+
+    .crop-handle.bottom-left {
+        bottom: -8px;
+        left: -8px;
+        width: 16px;
+        height: 16px;
+        cursor: sw-resize;
+        border-radius: 50%;
+    }
+
+    .crop-handle.bottom-right {
+        bottom: -8px;
+        right: -8px;
+        width: 16px;
+        height: 16px;
+        cursor: se-resize;
+        border-radius: 50%;
+    }
+
+.crop-area {
+    position: absolute;
+    border: 2px dashed #fff;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+    cursor: move;
+    z-index: 999;
+}
+/* ===== SCROLLBARS PARA PANELES ===== */
+.panel-content {
+    width: 300px;
+    padding: 1.5rem;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+    /* Scrollbar personalizada para el panel principal */
+    .panel-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .panel-content::-webkit-scrollbar-track {
+        background: var(--cream-light);
+        border-radius: 3px;
+    }
+
+    .panel-content::-webkit-scrollbar-thumb {
+        background: var(--brown-light);
+        border-radius: 3px;
+    }
+
+        .panel-content::-webkit-scrollbar-thumb:hover {
+            background: var(--steel-blue);
+        }
+
+/* Para Firefox */
+.panel-content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--brown-light) var(--cream-light);
+}
+
+/* ===== CLASES DE SCROLLBAR ESPECÍFICAS ===== */
+.scrollable-content {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+    .scrollable-content::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .scrollable-content::-webkit-scrollbar-thumb {
+        background: var(--brown-light);
+        border-radius: 3px;
+    }
+
+.controls-scrollable {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+    .controls-scrollable::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .controls-scrollable::-webkit-scrollbar-thumb {
+        background: var(--brown-light);
+        border-radius: 3px;
+    }
+
+.scrollable-section {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+    .scrollable-section::-webkit-scrollbar {
+        width: 4px;
+    }
+
+.scrollable-subsection {
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.filters-grid.scrollable-content {
+    max-height: 350px;
+}
+
+.tab-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+    .tab-content h4 {
+        color: var(--brown-dark);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        border-bottom: 2px solid var(--cream);
+        padding-bottom: 0.5rem;
+        flex-shrink: 0; 
+    }
+
+.stickers-grid.scrollable-content {
+    max-height: 450px;
+}
+
+.stickers-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.text-controls.scrollable-content {
+    max-height: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+    min-height: fit-content;
+}
+
+.perspective-controls.scrollable-section {
+    max-height: 200px;
+}
+
+.crop-controls.scrollable-section {
+    max-height: 250px;
+}
+
+.editor-layout {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.editor-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.content-panel.expanded {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+.image-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f8f9fa;
+    position: relative;
+    min-height: 0; 
+}
+
+@media (max-height: 768px) {
+    .scrollable-content {
+        max-height: 300px;
+    }
+
+    .controls-scrollable {
+        max-height: 400px;
+    }
+
+    .stickers-grid.scrollable-content {
+        max-height: 350px;
+    }
+
+    .text-controls.scrollable-content {
+        max-height: 350px;
+    }
+}
+
+/* Estilo para el botón de WhatsApp */
+.btn-info {
+    background-color: #25D366;
+    border-color: #25D366;
+    color: white;
+}
+
+    .btn-info:hover {
+        background-color: #128C7E;
+        border-color: #128C7E;
+        color: white;
+    }
+
+/* Icono de WhatsApp */
+.bi-whatsapp::before {
+    content: "💬"; /* Puedes usar un icono de Bootstrap Icons o emoji */
+}

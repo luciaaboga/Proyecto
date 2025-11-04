@@ -3110,6 +3110,6 @@ C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\com
 C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\compressed\98ksmw6zqu-wjb94l3mto.gz
 C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\compressed\e0epkro0t0-wdu3swnr5d.gz
 C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\compressed\u7mpain7tr-ca7xvkair8.gz
-C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\compressed\shzc4kbekv-klpzxrfx3s.gz
-C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\compressed\hjvzq3hgkr-3ruys9nbp3.gz
-C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\compressed\7hlk70vuiu-5rgxe1ad45.gz
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\compressed\shzc4kbekv-2cruphipqq.gz
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\compressed\hjvzq3hgkr-35m87eqp2q.gz
+C:\Users\bogad\OneDrive\Documentos\GitHub\Proyecto\Proyecto\obj\Debug\net8.0\compressed\7hlk70vuiu-fral5y7vpg.gz

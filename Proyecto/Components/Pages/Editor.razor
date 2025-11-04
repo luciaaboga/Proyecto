@@ -27,6 +27,10 @@
                 <i class="bi bi-check-circle"></i>
                 Guardar
             </button>
+            <button class="btn btn-info" @onclick="ConvertirAStickerWhatsApp" title="Convertir a Sticker de WhatsApp">
+                <i class="bi bi-whatsapp"></i>
+                Sticker WhatsApp
+            </button>
             <button class="btn btn-success" @onclick="DescargarImagen" title="Descargar imagen editada">
                 <i class="bi bi-download"></i>
                 Descargar
@@ -71,7 +75,7 @@
                 {
                     <div class="tab-content">
                         <h4>Filtros Rápidos</h4>
-                        <div class="filters-grid">
+                        <div class="filters-grid scrollable-content">
                             <button class="filter-preset" @onclick='() => AplicarFiltroPredeterminado("normal")'>
                                 <div class="filter-preview normal"></div>
                                 <span>Normal</span>
@@ -108,44 +112,45 @@
                 {
                     <div class="tab-content">
                         <h4>Ajustes Básicos</h4>
+                        <div class="controls-scrollable">
+                            <div class="control-item">
+                                <label>
+                                    <i class="bi bi-brightness-high"></i>
+                                    Brillo
+                                    <span class="value">@viewModel.EditorState.Brightness%</span>
+                                </label>
+                                <input type="range" min="0" max="200"
+                                       @bind="viewModel.EditorState.Brightness"
+                                       @bind:event="oninput"
+                                       @onchange="AplicarFiltros"
+                                       class="control-slider" />
+                            </div>
 
-                        <div class="control-item">
-                            <label>
-                                <i class="bi bi-brightness-high"></i>
-                                Brillo
-                                <span class="value">@viewModel.EditorState.Brightness%</span>
-                            </label>
-                            <input type="range" min="0" max="200"
-                                   @bind="viewModel.EditorState.Brightness"
-                                   @bind:event="oninput"
-                                   @onchange="AplicarFiltros"
-                                   class="control-slider" />
-                        </div>
+                            <div class="control-item">
+                                <label>
+                                    <i class="bi bi-contrast"></i>
+                                    Contraste
+                                    <span class="value">@viewModel.EditorState.Contrast%</span>
+                                </label>
+                                <input type="range" min="0" max="200"
+                                       @bind="viewModel.EditorState.Contrast"
+                                       @bind:event="oninput"
+                                       @onchange="AplicarFiltros"
+                                       class="control-slider" />
+                            </div>
 
-                        <div class="control-item">
-                            <label>
-                                <i class="bi bi-contrast"></i>
-                                Contraste
-                                <span class="value">@viewModel.EditorState.Contrast%</span>
-                            </label>
-                            <input type="range" min="0" max="200"
-                                   @bind="viewModel.EditorState.Contrast"
-                                   @bind:event="oninput"
-                                   @onchange="AplicarFiltros"
-                                   class="control-slider" />
-                        </div>
-
-                        <div class="control-item">
-                            <label>
-                                <i class="bi bi-droplet"></i>
-                                Saturación
-                                <span class="value">@viewModel.EditorState.Saturation%</span>
-                            </label>
-                            <input type="range" min="0" max="200"
-                                   @bind="viewModel.EditorState.Saturation"
-                                   @bind:event="oninput"
-                                   @onchange="AplicarFiltros"
-                                   class="control-slider" />
+                            <div class="control-item">
+                                <label>
+                                    <i class="bi bi-droplet"></i>
+                                    Saturación
+                                    <span class="value">@viewModel.EditorState.Saturation%</span>
+                                </label>
+                                <input type="range" min="0" max="200"
+                                       @bind="viewModel.EditorState.Saturation"
+                                       @bind:event="oninput"
+                                       @onchange="AplicarFiltros"
+                                       class="control-slider" />
+                            </div>
                         </div>
                     </div>
                 }
@@ -154,88 +159,155 @@
                 {
                     <div class="tab-content">
                         <h4>Transformaciones</h4>
-                        <div class="control-group">
-                            <label>
-                                <i class="bi bi-crop"></i>
-                                Recortar Imagen
-                            </label>
-                            <div class="crop-controls">
-                                <button class="btn btn-sm @(viewModel.EditorState.IsCropping ? "btn-primary" : "btn-outline")" 
-                                        @onclick="ToggleCropping">
-                                    @(viewModel.EditorState.IsCropping ? "Desactivar Recorte" : "Activar Recorte")
-                                </button>
-                
-                                @if (viewModel.EditorState.IsCropping)
-                                {
-                                    <button class="btn btn-sm btn-success" @onclick="AplicarRecorte">
-                                        <i class="bi bi-check"></i>
-                                        Aplicar Recorte
-                                    </button>
-                                    <button class="btn btn-sm btn-secondary" @onclick="CancelarRecorte">
-                                        <i class="bi bi-x"></i>
-                                        Cancelar
+                        <div class="controls-scrollable">
+                            <div class="control-group">
+                                <label>
+                                    <i class="bi bi-crop"></i>
+                                    Recortar Imagen
+                                </label>
+                                <div class="crop-controls scrollable-section">
+                                    <button class="btn btn-sm @(viewModel.EditorState.IsCropping ? "btn-primary" : "btn-outline")"
+                                            @onclick="ToggleCropping">
+                                        @(viewModel.EditorState.IsCropping ? "Desactivar Recorte" : "Activar Recorte")
                                     </button>
 
-                                    <div class="crop-dimensions">
-                                        <div class="dimension-input">
-                                            <label>X:</label>
-                                            <input type="number" @bind="viewModel.EditorState.CropArea.X"
-                                                   @bind:event="oninput" class="form-control-sm" />
+                                    @if (viewModel.EditorState.IsCropping)
+                                    {
+                                        <div class="crop-controls">
+                                            <button class="btn btn-sm btn-success"
+                                                    @onclick:preventDefault
+                                                    @onclick:stopPropagation
+                                                    @onclick="AplicarRecorte">
+                                                <i class="bi bi-check"></i>
+                                                Aplicar Recorte
+                                            </button>
+                                            <button class="btn btn-sm btn-secondary"
+                                                    @onclick:preventDefault
+                                                    @onclick:stopPropagation
+                                                    @onclick="CancelarRecorte">
+                                                <i class="bi bi-x"></i>
+                                                Cancelar
+                                            </button>
+
+                                            <div class="crop-dimensions scrollable-subsection">
+                                                <div class="dimension-input">
+                                                    <label>X:</label>
+                                                    <input type="number" @bind="viewModel.EditorState.CropArea.X"
+                                                           @bind:event="oninput"
+                                                           @onclick:preventDefault
+                                                           @onclick:stopPropagation
+                                                           class="form-control-sm" />
+                                                </div>
+                                                <div class="dimension-input">
+                                                    <label>Y:</label>
+                                                    <input type="number" @bind="viewModel.EditorState.CropArea.Y"
+                                                           @bind:event="oninput"
+                                                           @onclick:preventDefault
+                                                           @onclick:stopPropagation
+                                                           class="form-control-sm" />
+                                                </div>
+                                                <div class="dimension-input">
+                                                    <label>Ancho:</label>
+                                                    <input type="number" @bind="viewModel.EditorState.CropArea.Width"
+                                                           @bind:event="oninput"
+                                                           @onclick:preventDefault
+                                                           @onclick:stopPropagation
+                                                           class="form-control-sm" />
+                                                </div>
+                                                <div class="dimension-input">
+                                                    <label>Alto:</label>
+                                                    <input type="number" @bind="viewModel.EditorState.CropArea.Height"
+                                                           @bind:event="oninput"
+                                                           @onclick:preventDefault
+                                                           @onclick:stopPropagation
+                                                           class="form-control-sm" />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="dimension-input">
-                                            <label>Y:</label>
-                                            <input type="number" @bind="viewModel.EditorState.CropArea.Y"
-                                                   @bind:event="oninput" class="form-control-sm" />
-                                        </div>
-                                        <div class="dimension-input">
-                                            <label>Ancho:</label>
-                                            <input type="number" @bind="viewModel.EditorState.CropArea.Width"
-                                                   @bind:event="oninput" class="form-control-sm" />
-                                        </div>
-                                        <div class="dimension-input">
-                                            <label>Alto:</label>
-                                            <input type="number" @bind="viewModel.EditorState.CropArea.Height"
-                                                   @bind:event="oninput" class="form-control-sm" />
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label>
+                                    <i class="bi bi-aspect-ratio"></i>
+                                    Distorsión de Perspectiva
+                                </label>
+                                <div class="perspective-controls scrollable-section">
+                                    <div class="perspective-slider">
+                                        <label>
+                                            Perspectiva Horizontal:
+                                            <span class="value">@viewModel.EditorState.Perspective%</span>
+                                        </label>
+                                        <input type="range" min="-100" max="100"
+                                               @bind="viewModel.EditorState.Perspective"
+                                               @bind:event="oninput"
+                                               class="perspective-slider-control" />
+                                        <div class="slider-labels">
+                                            <span>-100%</span>
+                                            <span>0%</span>
+                                            <span>100%</span>
                                         </div>
                                     </div>
-                                }
-                            </div>
-                        </div>
 
-                        <div class="control-group">
-                            <label>Rotación</label>
-                            <div class="button-group">
-                                <button class="btn btn-sm btn-outline" @onclick="RotarIzquierda">
-                                    <i class="bi bi-arrow-counterclockwise"></i>
-                                    90°
-                                </button>
-                                <button class="btn btn-sm btn-outline" @onclick="RotarDerecha">
-                                    <i class="bi bi-arrow-clockwise"></i>
-                                    90°
-                                </button>
-                                <button class="btn btn-sm btn-outline" @onclick="Rotar180">
-                                    <i class="bi bi-arrow-repeat"></i>
-                                    180°
-                                </button>
-                            </div>
-                            <div class="rotation-display">
-                                Ángulo: @viewModel.EditorState.Rotation°
-                            </div>
-                        </div>
+                                    <div class="perspective-slider">
+                                        <label>
+                                            Perspectiva Vertical:
+                                            <span class="value">@viewModel.EditorState.PerspectiveVertical%</span>
+                                        </label>
+                                        <input type="range" min="-100" max="100"
+                                               @bind="viewModel.EditorState.PerspectiveVertical"
+                                               @bind:event="oninput"
+                                               class="perspective-slider-control" />
+                                        <div class="slider-labels">
+                                            <span>-100%</span>
+                                            <span>0%</span>
+                                            <span>100%</span>
+                                        </div>
+                                    </div>
 
-                        <div class="control-group">
-                            <label>Voltear</label>
-                            <div class="button-group">
-                                <button class="btn btn-sm @(viewModel.EditorState.FlipHorizontal ? "btn-primary" : "btn-outline")" 
-                                        @onclick="ToggleFlipHorizontal">
-                                    <i class="bi bi-arrow-left-right"></i>
-                                    Horizontal
-                                </button>
-                                <button class="btn btn-sm @(viewModel.EditorState.FlipVertical ? "btn-primary" : "btn-outline")" 
-                                        @onclick="ToggleFlipVertical">
-                                    <i class="bi bi-arrow-up-down"></i>
-                                    Vertical
-                                </button>
+                                    <button class="btn btn-sm btn-outline" @onclick="ResetPerspective">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                        Resetear Perspectiva
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label>Rotación</label>
+                                <div class="button-group">
+                                    <button class="btn btn-sm btn-outline" @onclick="RotarIzquierda">
+                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                        90°
+                                    </button>
+                                    <button class="btn btn-sm btn-outline" @onclick="RotarDerecha">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                        90°
+                                    </button>
+                                    <button class="btn btn-sm btn-outline" @onclick="Rotar180">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                        180°
+                                    </button>
+                                </div>
+                                <div class="rotation-display">
+                                    Ángulo: @viewModel.EditorState.Rotation°
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label>Voltear</label>
+                                <div class="button-group">
+                                    <button class="btn btn-sm @(viewModel.EditorState.FlipHorizontal ? "btn-primary" : "btn-outline")"
+                                            @onclick="ToggleFlipHorizontal">
+                                        <i class="bi bi-arrow-left-right"></i>
+                                        Horizontal
+                                    </button>
+                                    <button class="btn btn-sm @(viewModel.EditorState.FlipVertical ? "btn-primary" : "btn-outline")"
+                                            @onclick="ToggleFlipVertical">
+                                        <i class="bi bi-arrow-up-down"></i>
+                                        Vertical
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -245,7 +317,7 @@
                 {
                     <div class="tab-content">
                         <h4>Stickers</h4>
-                        <div class="stickers-grid">
+                        <div class="stickers-grid scrollable-content">
                             <div class="sticker-category">
                                 <h5>Emojis</h5>
                                 <div class="stickers-list">
@@ -271,7 +343,7 @@
                 {
                     <div class="tab-content">
                         <h4>Agregar Texto</h4>
-                        <div class="text-controls">
+                        <div class="text-controls scrollable-content">
                             <input type="text" class="form-control" placeholder="Escribe tu texto..."
                                    @bind="nuevoTexto" @bind:event="oninput" />
 
@@ -279,7 +351,6 @@
                                 <label>Tamaño:</label>
                                 <input type="range" min="12" max="72" @bind="tamanoTexto" @bind:event="oninput"
                                        class="text-size-slider" />
-                                <!--<span>@tamanoTextopx</span>-->
                             </div>
 
                             <div class="text-options">
@@ -329,9 +400,9 @@
                             <div class="crop-overlay">
                                 <div class="crop-area"
                                      style="left: @(viewModel.EditorState.CropArea.X)px;
-                                            top: @(viewModel.EditorState.CropArea.Y)px;
-                                            width: @(viewModel.EditorState.CropArea.Width)px;
-                                            height: @(viewModel.EditorState.CropArea.Height)px;"
+                                                    top: @(viewModel.EditorState.CropArea.Y)px;
+                                                    width: @(viewModel.EditorState.CropArea.Width)px;
+                                                    height: @(viewModel.EditorState.CropArea.Height)px;"
                                      @onmousedown="@((e) => StartCropDragging("move", e))">
 
                                     <div class="crop-handle top" @onmousedown="@((e) => StartCropDragging("top", e))"></div>
@@ -487,10 +558,21 @@
         var transforms = new List<string>();
 
         styles.Add($"filter: brightness({viewModel.EditorState.Brightness}%) contrast({viewModel.EditorState.Contrast}%) saturate({viewModel.EditorState.Saturation}%)");
+
         transforms.Add($"rotate({viewModel.EditorState.Rotation}deg)");
         if (viewModel.EditorState.FlipHorizontal) transforms.Add("scaleX(-1)");
         if (viewModel.EditorState.FlipVertical) transforms.Add("scaleY(-1)");
         transforms.Add($"scale({zoomLevel})");
+
+        if (viewModel.EditorState.Perspective != 0 || viewModel.EditorState.PerspectiveVertical != 0)
+        {
+            var perspectiveX = viewModel.EditorState.Perspective / 100.0;
+            var perspectiveY = viewModel.EditorState.PerspectiveVertical / 100.0;
+
+            var matrix = $"matrix(1, {perspectiveY * 0.2}, {perspectiveX * 0.2}, 1, 0, 0)";
+            transforms.Add(matrix);
+        }
+
         styles.Add($"transform: {string.Join(" ", transforms)}");
 
         return string.Join("; ", styles);
@@ -532,7 +614,9 @@
                 {
                     rotation = viewModel.EditorState.Rotation,
                     flipHorizontal = viewModel.EditorState.FlipHorizontal,
-                    flipVertical = viewModel.EditorState.FlipVertical
+                    flipVertical = viewModel.EditorState.FlipVertical,
+                    perspective = viewModel.EditorState.Perspective,          
+                    perspectiveVertical = viewModel.EditorState.PerspectiveVertical
                 };
 
                 await JSRuntime.InvokeVoidAsync(
@@ -829,6 +913,7 @@
                     break;
             }
 
+            ValidarLimitesRecorte();
             StateHasChanged();
         }
         else if (isResizingWidth && resizedElement != null)
@@ -955,10 +1040,10 @@
         {
             viewModel.EditorState.CropArea = new CropArea
             {
-                X = 50,
-                Y = 50,
-                Width = 200,
-                Height = 200
+                X = 100,
+                Y = 100,
+                Width = 300,
+                Height = 300
             };
         }
 
@@ -982,27 +1067,57 @@
 
     private async Task AplicarRecorte()
     {
-        if (viewModel.CurrentProject != null)
+        if (viewModel.CurrentProject != null && viewModel.EditorState.IsCropping)
         {
             try
             {
+                if (viewModel.EditorState.CropArea.Width <= 0 || viewModel.EditorState.CropArea.Height <= 0)
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", "El área de recorte no es válida");
+                    return;
+                }
+
                 var croppedImageUrl = await JSRuntime.InvokeAsync<string>(
                     "applyCrop",
                     viewModel.CurrentProject.ImagePath,
-                    viewModel.EditorState.CropArea
+                    new
+                    {
+                        x = viewModel.EditorState.CropArea.X,
+                        y = viewModel.EditorState.CropArea.Y,
+                        width = viewModel.EditorState.CropArea.Width,
+                        height = viewModel.EditorState.CropArea.Height
+                    }
                 );
 
-                viewModel.CurrentProject.ImagePath = croppedImageUrl;
-                viewModel.EditorState.IsCropping = false;
+                if (!string.IsNullOrEmpty(croppedImageUrl))
+                {
+                    viewModel.CurrentProject.ImagePath = croppedImageUrl;
+                    viewModel.EditorState.IsCropping = false;
 
-                await GuardarProyecto();
-                StateHasChanged();
+                    await JSRuntime.InvokeVoidAsync("alert", "Recorte aplicado correctamente");
+                    StateHasChanged();
+                }
+                else
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", "Error: No se pudo generar la imagen recortada");
+                }
             }
             catch (Exception ex)
             {
                 await JSRuntime.InvokeVoidAsync("alert", "Error al aplicar el recorte: " + ex.Message);
             }
         }
+    }
+
+    private void ValidarLimitesRecorte()
+    {
+        var cropArea = viewModel.EditorState.CropArea;
+
+        if (cropArea.X < 0) cropArea.X = 0;
+        if (cropArea.Y < 0) cropArea.Y = 0;
+
+        if (cropArea.Width < 10) cropArea.Width = 10;
+        if (cropArea.Height < 10) cropArea.Height = 10;
     }
 
     private void CancelarRecorte()
@@ -1015,4 +1130,64 @@
     {
         StateHasChanged();
     }
+
+    // ========== MÉTODOS DE PERSPECTIVA ==========
+    private async Task ResetPerspective()
+    {
+        viewModel.EditorState.Perspective = 0;
+        viewModel.EditorState.PerspectiveVertical = 0;
+        await AplicarFiltros();
+        StateHasChanged();
+    }
+
+    // ========== MÉTODOS DE CONVERSIÓN DE STICKERS ==========
+
+    private async Task ConvertirAStickerWhatsApp()
+    {
+        if (viewModel.CurrentProject != null)
+        {
+            try
+            {
+                // Mostrar mensaje de procesamiento
+                await JSRuntime.InvokeVoidAsync("alert", "Procesando imagen para WhatsApp...");
+
+                var filters = new
+                {
+                    brightness = viewModel.EditorState.Brightness,
+                    contrast = viewModel.EditorState.Contrast,
+                    saturation = viewModel.EditorState.Saturation
+                };
+
+                var transformations = new
+                {
+                    rotation = viewModel.EditorState.Rotation,
+                    flipHorizontal = viewModel.EditorState.FlipHorizontal,
+                    flipVertical = viewModel.EditorState.FlipVertical,
+                    perspective = viewModel.EditorState.Perspective,
+                    perspectiveVertical = viewModel.EditorState.PerspectiveVertical
+                };
+
+                // Llamar a la función JavaScript para crear el sticker
+                await JSRuntime.InvokeVoidAsync(
+                    "convertToWhatsAppSticker",
+                    viewModel.CurrentProject.ImagePath,
+                    viewModel.EditorState.Stickers,
+                    viewModel.EditorState.TextElements,
+                    filters,
+                    transformations,
+                    $"{viewModel.CurrentProject.Name}-sticker.webp"
+                );
+
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Error al crear el sticker: " + ex.Message);
+            }
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "No hay imagen para convertir");
+        }
+    }
 }
+

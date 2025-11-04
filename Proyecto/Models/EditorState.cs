@@ -14,6 +14,8 @@
         public List<TextElement> TextElements { get; set; } = new List<TextElement>();
         public bool IsCropping { get; set; } = false;
         public CropArea CropArea { get; set; } = new CropArea();
+        public int Perspective { get; set; } = 0; 
+        public int PerspectiveVertical { get; set; } = 0; 
     }
 
     public class EditorElement
